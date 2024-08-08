@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="initial-scale=1.0, width=device-width, height=device-height, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
+		<title>GW2 Meta Planner</title>
+		<link href="style.css" rel="stylesheet" type="text/css" />
+		<script type="importmap">
+			{
+				"imports": {
+					"alpinejs": "https://unpkg.com/alpinejs@3.14.1/dist/module.esm.js"
+				}
+			}
+		</script>
+		<script type="module" src="script.js"></script>
+	</head>
+	<body x-data="" :class="$store.global.bodyClasses">
+		<h1>GW2 Meta Planner</h1>
+		<main>
+			<div x-data="gw2MetaPlanner">
+				<header>
+					<button
+						@click="$store.global.toggleDarkMode()"
+						x-text="$store.global.isDarkMode ? 'Light Mode' : 'Dark Mode'"
+					></button>
+					<select>
+						<option value="1">One</option>
+						<option value="2">Two</option>
+						<option value="3">Three</option>
+					</select>
+					<ul>
+						<template x-for="(route, i) in routes">
+							<li>
+								<button
+									x-text="`${route.name ? route.name : `unnamed [${i}]`}`"
+								></button>
+							</li>
+						</template>
+					</ul>
+				</header>
+				<div class="layout">
+					<div class="section clock">
+						<div class="header">
+							<h2>Time</h2>
+						</div>
+						<div class="content">
+							<ul class="meta-grid clock">
+								<li class="timezone">
+									<p class="title" x-text="`GMT`"></p>
+									<ul>
+										<template x-for="i in 96">
+											<li
+												x-text="getLocalTimeInMinutes((i - 1) * 15)"
+												:style="{gridRowStart: generateRowNumberFromMinutes((i - 1) * 15) + 1}"
+											></li>
+										</template>
+									</ul>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="section metas" x-ref="metasSection">
+						<div class="header">
+							<h2>Metas</h2>
+						</div>
+						<div class="content" x-ref="metasContent">
+							<ul class="meta-grid">
+								<template
+									x-for="[releaseName, groups] in Object.entries(releases)"
+								>
+									<li
+										class="release"
+										:style="{gridColumnEnd: `span ${Object.entries(groups).length}`}"
+									>
+										<p class="title" x-text="releaseName"></p>
+										<ul>
+											<template
+												x-for="[groupName, metas] in Object.entries(groups)"
+											>
+												<li class="group">
+													<p class="title" x-text="groupName"></p>
+													<ul>
+														<template x-for="meta in metas">
+															<li
+																class="meta"
+																:data-release="meta.release"
+																:style="{gridRowStart: generateRowNumberFromTime(meta.time), gridRowEnd: `span ${meta.max / 5}`}"
+															>
+																<p class="title" x-text="meta.name"></p>
+																<p x-text="getLocalTime(meta.time)"></p>
+																<p x-text="meta.waypoint"></p>
+																<dl class="durations">
+																	<dt>Min</dt>
+																	<dd x-text="meta.min"></dd>
+																	<dt>Avg</dt>
+																	<dd x-text="meta.average"></dd>
+																	<dt>Max</dt>
+																	<dd x-text="meta.max"></dd>
+																</dl>
+																<ul class="controls">
+																	<template x-for="(route, i) in routes">
+																		<li>
+																			<button
+																				:disabled="isMetaInRoute(i, meta.id, meta.time)"
+																				@click="addToRoute(i, meta.id, meta.time)"
+																				x-text="`${route.name ? route.name : `unnamed [${i}]`}`"
+																			></button>
+																		</li>
+																	</template>
+																</ul>
+															</li>
+														</template>
+													</ul>
+												</li>
+											</template>
+										</ul>
+									</li>
+								</template>
+							</ul>
+						</div>
+					</div>
+					<div class="section routes">
+						<div class="header">
+							<h2>Routes</h2>
+							<button @click="createRoute">Add Route</button>
+						</div>
+						<div class="content">
+							<ul class="meta-grid">
+								<template x-for="(route, i) in routes">
+									<li class="route">
+										<div class="header">
+											<input x-model="route.name" type="text" />
+											<button
+												@click="removeRoute(i)"
+												:aria-label="`Remove Route ID ${i}`"
+											>
+												❌
+											</button>
+										</div>
+										<ul>
+											<template x-for="m in route.metas">
+												<li
+													class="meta"
+													:data-release="meta.release"
+													x-data="{meta: prepareRouteMeta(m)}"
+													:style="{gridRowStart: generateRowNumberFromTime(meta.time), gridRowEnd: `span ${generateRowNumberFromMinutes(m.duration)}`}"
+												>
+													<p class="title" x-text="meta.name"></p>
+													<p x-text="getLocalTime(meta.time)"></p>
+													<p x-text="meta.waypoint"></p>
+													<dl class="durations">
+														<dt>Min</dt>
+														<dd x-text="meta.min"></dd>
+														<dt class="est" title="Your Estimate">Est</dt>
+														<dd>
+															<input
+																x-model.number="m.duration"
+																type="number"
+															/>
+														</dd>
+														<dt>Max</dt>
+														<dd x-text="meta.max"></dd>
+													</dl>
+													<ul class="controls">
+														<li>
+															<button>❌</button>
+															<button>⨁</button>
+														</li>
+													</ul>
+												</li>
+											</template>
+										</ul>
+									</li>
+								</template>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</body>
+</html>
