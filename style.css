@@ -28,7 +28,11 @@ body {
 	--color-sys-accent-1-intense: var(--color-ref-blue);
 	--color-sys-accent-2-muted: var(--color-ref-pink);
 	--color-sys-accent-2-intense: var(--color-ref-raspberry);
-	font-family: system-ui, sans-serif;
+	font-family: "Noto Sans", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 400;
+	font-style: normal;
+	font-variation-settings: "wdth" 100;
 	line-height: 1.25;
 	background-color: var(--color-sys-bg);
 	color: var(--color-sys-fg);
@@ -46,11 +50,103 @@ body {
 	}
 }
 
+.material-symbols-outlined.inline {
+	font-size: 1em;
+}
+
+.material-symbols-outlined.sm {
+	font-size: 1rem;
+}
+
+button {
+	display: inline-flex;
+	appearance: none;
+	border: none;
+	background: color-mix(
+		in oklab,
+		var(--color-sys-accent-1-intense) 15%,
+		transparent
+	);
+	color: var(--color-sys-accent-1-intense);
+	font: inherit;
+	padding: 0.25rem;
+	cursor: pointer;
+	border-radius: 2px;
+
+	&:hover {
+		background: color-mix(
+			in oklab,
+			var(--color-sys-accent-1-intense) 25%,
+			transparent
+		);
+	}
+}
+
+.icon-button {
+	line-height: 1;
+}
+
 .layout {
 	display: grid;
 	width: 100vw;
 	grid-template-columns: max-content 1fr max-content;
 	/* position: relative; */
+}
+
+h1 {
+	padding: 0.5rem 0.5rem 0;
+}
+
+label {
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	font-weight: 700;
+}
+
+input[type="text"],
+input[type="time"],
+input[type="number"] {
+	appearance: none;
+	border: 1px solid var(--color-sys-accent-1-intense);
+	background: var(--color-sys-surface);
+	color: inherit;
+	font: inherit;
+}
+
+[x-data="gw2MetaPlanner"] {
+	& > header {
+		border-bottom: 2px solid var(--color-sys-fg);
+		padding: 0.5rem;
+		display: flex;
+		gap: 1rem;
+
+		& > .control {
+			display: flex;
+			flex-flow: column;
+			align-items: start;
+			gap: 0.5rem;
+		}
+	}
+}
+
+.manual-entry {
+	display: flex;
+	align-items: center;
+
+	gap: 0.5rem;
+	& > select {
+	}
+
+	& > input {
+		/* width: 8ch; */
+	}
+
+	& > ul {
+		list-style: none;
+		padding: 0;
+		display: flex;
+		gap: 0.25rem;
+	}
 }
 
 .section {
@@ -340,14 +436,17 @@ body {
 
 	& > [x-text="meta.waypoint"] {
 		grid-area: waypoint;
+		margin-inline-start: 0.25rem;
 	}
 
 	& > [x-text="meta.time"] {
 		grid-area: time;
+		font-style: italic;
 	}
 
 	& > .durations {
 		font-size: 0.7rem;
+		min-height: 1.25rem;
 		grid-area: duration;
 		display: flex;
 		align-items: center;
@@ -371,17 +470,26 @@ body {
 			> input {
 				display: block;
 				width: 8ch;
-				appearance: none;
-				border: 1px solid var(--color-sys-accent-1-intense);
-				background: var(--color-sys-surface);
-				color: inherit;
-				font: inherit;
+				height: 1.25rem;
 			}
 		}
 	}
 
 	& > .controls {
 		grid-area: controls;
+		align-self: start;
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 0.25rem;
+
+		& > li {
+			display: flex;
+		}
+
+		& button {
+			width: 100%;
+			display: block;
+		}
 	}
 
 	&[data-release="Heart of Thorns"] {

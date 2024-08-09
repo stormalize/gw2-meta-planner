@@ -7,6 +7,12 @@
 			content="initial-scale=1.0, width=device-width, height=device-height, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
 		/>
 		<title>GW2 Meta Planner</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Material+Symbols+Outlined:wght,FILL@400,1&display=swap"
+			rel="stylesheet"
+		/>
 		<link href="style.css" rel="stylesheet" type="text/css" />
 		<script type="importmap">
 			{
@@ -22,24 +28,48 @@
 		<main>
 			<div x-data="gw2MetaPlanner">
 				<header>
-					<button
-						@click="$store.global.toggleDarkMode()"
-						x-text="$store.global.isDarkMode ? 'Light Mode' : 'Dark Mode'"
-					></button>
-					<select>
-						<option value="1">One</option>
-						<option value="2">Two</option>
-						<option value="3">Three</option>
-					</select>
-					<ul>
-						<template x-for="(route, i) in routes">
-							<li>
-								<button
-									x-text="`${route.name ? route.name : `unnamed [${i}]`}`"
-								></button>
-							</li>
-						</template>
-					</ul>
+					<div class="control">
+						<label for="dark-mode-toggle">Light/Dark Theme</label>
+						<button
+							id="dark-mode-toggle"
+							@click="$store.global.toggleDarkMode()"
+							x-text="`Toggle to ${$store.global.isDarkMode ? 'Light Mode' : 'Dark Mode'}`"
+						></button>
+					</div>
+					<div class="control">
+						<label for="manual-entry">Add Unscheduled Meta Event</label>
+						<div class="manual-entry">
+							<select x-model="unscheduledMetaForm.meta" id="manual-entry">
+								<template
+									x-for="[name, metas] in Object.entries(unscheduledMetas)"
+								>
+									<optgroup :label="name">
+										<template x-for="meta in metas">
+											<option :value="meta.id" x-text="meta.name"></option>
+										</template>
+									</optgroup>
+								</template>
+							</select>
+							<label for="manual-entry-time">Time:</label>
+							<input
+								x-model="unscheduledMetaForm.time"
+								id="manual-entry-time"
+								type="time"
+								step="900"
+								@change="console.log(event.target.value)"
+							/>
+							<ul>
+								<template x-for="(route, i) in routes">
+									<li>
+										<button
+											:title="`Add to ${route.name} route`"
+											x-text="`+ ${route.name ? route.name : `unnamed [${i}]`}`"
+										></button>
+									</li>
+								</template>
+							</ul>
+						</div>
+					</div>
 				</header>
 				<div class="layout">
 					<div class="section clock">
@@ -104,9 +134,10 @@
 																	<template x-for="(route, i) in routes">
 																		<li>
 																			<button
+																				:title="`Add to ${route.name} route`"
 																				:disabled="isMetaInRoute(i, meta.id, meta.time)"
 																				@click="addToRoute(i, meta.id, meta.time)"
-																				x-text="`${route.name ? route.name : `unnamed [${i}]`}`"
+																				x-text="`+ ${route.name ? route.name : `unnamed [${i}]`}`"
 																			></button>
 																		</li>
 																	</template>
@@ -136,12 +167,18 @@
 											<button
 												@click="removeRoute(i)"
 												:aria-label="`Remove Route ID ${i}`"
+												:title="`Remove Route ID ${i}`"
 											>
-												❌
+												<span class="material-symbols-outlined inline"
+													>delete</span
+												>
 											</button>
 										</div>
 										<ul>
-											<template x-for="m in route.metas">
+											<template
+												x-for="(m, index) in route.metas"
+												:key="`${m.id}-${index}-${m.time}`"
+											>
 												<li
 													class="meta"
 													:data-release="meta.release"
@@ -166,8 +203,28 @@
 													</dl>
 													<ul class="controls">
 														<li>
-															<button>❌</button>
-															<button>⨁</button>
+															<button
+																class="icon-button"
+																@click="removeFromRoute(i, index)"
+																aria-label="delete"
+																:title="`Delete from ${route.name}`"
+															>
+																<span class="material-symbols-outlined sm"
+																	>delete</span
+																>
+															</button>
+														</li>
+														<li>
+															<button
+																class="icon-button"
+																@click="resetMetaEstimate(i, index, meta.average)"
+																aria-label="reset time estimate to average"
+																title="Reset time estimate to average"
+															>
+																<span class="material-symbols-outlined sm"
+																	>history</span
+																>
+															</button>
 														</li>
 													</ul>
 												</li>

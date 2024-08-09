@@ -87,9 +87,17 @@ Alpine.data("gw2MetaPlanner", () => ({
 	toggleDarkMode() {
 		this.isDarkMode = !this.isDarkMode;
 	},
+	unscheduledMetaForm: {
+		meta: null,
+		time: "00:00",
+	},
 	routes: [{ name: "Demo", metas: [{ id: 1, time: 0.25, duration: 10 }] }], // list of ids
 	get releases() {
+		// skip unscheduled metas, i.e. with no times listed
 		const sorted = this.metas.reduce((obj, meta) => {
+			if (meta?.times.length === 0) {
+				return obj;
+			}
 			if (meta.release in obj) {
 				if (meta.group in obj[meta.release]) {
 					obj[meta.release][meta.group] = [
@@ -106,6 +114,21 @@ Alpine.data("gw2MetaPlanner", () => ({
 				obj[meta.release] = {
 					[`${meta.group}`]: this.generateMetaCopiesFromTimes(meta),
 				};
+			}
+			return obj;
+		}, {});
+		// console.log(sorted);
+		return sorted;
+	},
+	get unscheduledMetas() {
+		const sorted = this.metas.reduce((obj, meta) => {
+			// only include metas with no scheduled times
+			if (meta?.times.length === 0) {
+				if (meta.release in obj) {
+					obj[meta.release] = [...obj[meta.release], meta];
+				} else {
+					obj[meta.release] = [meta];
+				}
 			}
 			return obj;
 		}, {});
@@ -127,6 +150,21 @@ Alpine.data("gw2MetaPlanner", () => ({
 		const duration = meta?.average;
 
 		this.routes[routeId].metas = [...metas, { id: metaId, time, duration }];
+
+		console.log(this.routes);
+	},
+	resetMetaEstimate(routeId, number, avg) {
+		const routeMeta = this.routes[routeId].metas[number];
+		if (routeMeta) {
+			routeMeta.duration = avg;
+		}
+	},
+	removeFromRoute(routeId, number) {
+		const route = this.routes[routeId];
+		console.log(route.metas);
+		const newMetas = route.metas.filter((meta, i) => i !== number);
+		console.log(newMetas);
+		route.metas = newMetas;
 	},
 	createRoute() {
 		this.routes = [...this.routes, { name: "Name", metas: [] }];
@@ -135,7 +173,6 @@ Alpine.data("gw2MetaPlanner", () => ({
 		const newRoutes = this.routes.filter((route, i) => i !== routeId);
 		this.routes = newRoutes;
 	},
-	removeFromRoute(routeId, number) {},
 	isMetaInRoute(routeId, metaId, time) {
 		const route = this.routes[routeId];
 		return route
@@ -179,6 +216,18 @@ Alpine.data("gw2MetaPlanner", () => ({
 	},
 	scrollObserver: null,
 	metas: [
+		{
+			id: 1,
+			release: "Core",
+			name: "Triple Trouble (guild)",
+			group: "World Bosses",
+			waypoint: "[&BMIDAAA=]",
+			type: "Boss",
+			times: [], // relative to reset
+			min: 5, // minutes
+			average: 7,
+			max: 10, // minutes
+		},
 		{
 			id: 0,
 			release: "Core",
@@ -240,6 +289,18 @@ Alpine.data("gw2MetaPlanner", () => ({
 			min: 15, // minutes
 			average: 20,
 			max: 25, // minutes
+		},
+		{
+			id: 1,
+			release: "Season 5",
+			name: "Dragonstorm (private)",
+			group: "Eye of the North",
+			waypoint: "[&BMIDAAA=]",
+			type: "Boss",
+			times: [], // relative to reset
+			min: 5, // minutes
+			average: 7,
+			max: 10, // minutes
 		},
 	],
 }));
