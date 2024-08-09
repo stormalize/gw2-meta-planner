@@ -1,4 +1,9 @@
 import Alpine from "alpinejs";
+import persist from "alpinejs-persist";
+
+Alpine.plugin(persist);
+
+const data = await getDataJson("/data.json");
 
 /**
  * TODO:
@@ -15,6 +20,12 @@ Alpine.data("gw2MetaPlanner", () => ({
 		this.$nextTick(() => {
 			this.setupIntersectObserver();
 		});
+
+		this.metas = data.metas;
+		this.unscheduledMetaForm.time = this.getLocalTime(0);
+		let timezoneOffset = new Date().getTimezoneOffset();
+		timezoneOffset = ((timezoneOffset > 0 ? -1 : 1) * timezoneOffset) / 60;
+		this.timezoneOffsetForReset = timezoneOffset;
 	},
 	setupIntersectObserver() {
 		const container = this.$refs.metasSection;
@@ -87,11 +98,14 @@ Alpine.data("gw2MetaPlanner", () => ({
 	toggleDarkMode() {
 		this.isDarkMode = !this.isDarkMode;
 	},
+	timezoneOffsetForReset: 0,
 	unscheduledMetaForm: {
-		meta: null,
+		meta: 0,
 		time: "00:00",
 	},
-	routes: [{ name: "Demo", metas: [{ id: 1, time: 0.25, duration: 10 }] }], // list of ids
+	routes: Alpine.$persist([
+		{ name: "Demo", metas: [{ id: 1, time: 1, duration: 10 }] },
+	]), // list of ids
 	get releases() {
 		// skip unscheduled metas, i.e. with no times listed
 		const sorted = this.metas.reduce((obj, meta) => {
@@ -132,7 +146,7 @@ Alpine.data("gw2MetaPlanner", () => ({
 			}
 			return obj;
 		}, {});
-		console.log(sorted);
+		// console.log(sorted);
 		return sorted;
 	},
 	findMetaById(id) {
@@ -144,14 +158,18 @@ Alpine.data("gw2MetaPlanner", () => ({
 			...routeMeta,
 		};
 	},
+	handleUnscheduledAdd(routeId) {
+		const time = this.getResetOffsetFromTime(this.unscheduledMetaForm.time);
+		this.addToRoute(routeId, this.unscheduledMetaForm.meta, time);
+	},
 	addToRoute(routeId, metaId, time) {
 		const metas = this.routes[routeId].metas;
 		const meta = this.findMetaById(metaId);
-		const duration = meta?.average;
+		const duration = meta?.avg;
 
 		this.routes[routeId].metas = [...metas, { id: metaId, time, duration }];
 
-		console.log(this.routes);
+		// console.log(this.routes);
 	},
 	resetMetaEstimate(routeId, number, avg) {
 		const routeMeta = this.routes[routeId].metas[number];
@@ -161,9 +179,7 @@ Alpine.data("gw2MetaPlanner", () => ({
 	},
 	removeFromRoute(routeId, number) {
 		const route = this.routes[routeId];
-		console.log(route.metas);
 		const newMetas = route.metas.filter((meta, i) => i !== number);
-		console.log(newMetas);
 		route.metas = newMetas;
 	},
 	createRoute() {
@@ -194,18 +210,33 @@ Alpine.data("gw2MetaPlanner", () => ({
 	},
 	generateRowNumberFromTime(time) {
 		// time is managed in hours from reset
-		return time * 12 + 1;
+		const result = time * 12 + 1;
+		return Math.round(result);
 	},
 	generateRowNumberFromMinutes(duration) {
 		// duration in minutes
 		// rounded up to nearest increment of 5 minutes
 		return Math.ceil(duration / 5);
 	},
+	getResetOffsetFromTime(timestr) {
+		const [hours, minutes, ...rest] = timestr.split(":");
+		//round minutes to multiples of 5 and then divide by 60 to get hour fraction
+		const hoursInt = Number(hours);
+		const minutesInt = Number(minutes);
+		const adjustedHours =
+			this.timezoneOffsetForReset < 0
+				? hoursInt - this.timezoneOffsetForReset
+				: hoursInt + this.timezoneOffsetForReset;
+		const total =
+			(adjustedHours >= 24 ? adjustedHours - 24 : adjustedHours) +
+			(Math.ceil(minutesInt / 5) * 5) / 60;
+		return total;
+	},
 	getLocalTimeInMinutes(minutes) {
 		return this.getLocalTime(minutes / 60);
 	},
 	getLocalTime(resetOffset) {
-		const minutes = (resetOffset % 1) * 60;
+		const minutes = Math.round((resetOffset % 1) * 60);
 		const hours = Math.floor(resetOffset);
 
 		const date = new Date();
@@ -215,94 +246,7 @@ Alpine.data("gw2MetaPlanner", () => ({
 		).padStart(2, "0")}`;
 	},
 	scrollObserver: null,
-	metas: [
-		{
-			id: 1,
-			release: "Core",
-			name: "Triple Trouble (guild)",
-			group: "World Bosses",
-			waypoint: "[&BMIDAAA=]",
-			type: "Boss",
-			times: [], // relative to reset
-			min: 5, // minutes
-			average: 7,
-			max: 10, // minutes
-		},
-		{
-			id: 0,
-			release: "Core",
-			name: "The Shatterer",
-			group: "World Bosses",
-			waypoint: "[&BE4DAAA=]",
-			type: "Boss",
-			times: [1], // relative to reset
-			min: 5, // minutes
-			average: 10,
-			max: 15, // minutes
-		},
-		{
-			id: 1,
-			release: "Core",
-			name: "Svanir Shaman",
-			group: "World Bosses",
-			waypoint: "[&BMIDAAA=]",
-			type: "Boss",
-			times: [0.25, 2.25], // relative to reset
-			min: 5, // minutes
-			average: 7,
-			max: 10, // minutes
-		},
-		{
-			id: 2,
-			release: "Season 1",
-			name: "Twisted Marionette (Public)",
-			group: "Eye of the North",
-			waypoint: "[&BAkMAAA=]",
-			type: "Boss",
-			times: [0], // relative to reset
-			min: 5, // minutes
-			average: 10,
-			max: 15, // minutes
-		},
-		{
-			id: 3,
-			release: "Heart of Thorns",
-			name: "Octovine",
-			group: "Auric Basin",
-			waypoint: "[&BAIIAAA=]",
-			type: "Boss",
-			times: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23], // relative to reset
-			min: 5, // minutes
-			average: 15,
-			max: 20, // minutes
-		},
-		{
-			id: 4,
-			release: "Heart of Thorns",
-			name: "Chak Gerent",
-			group: "Tangled Depths",
-			waypoint: "[&BPUHAAA=]",
-			type: "Boss",
-			times: [
-				0.5, 2.5, 4.5, 6.5, 8.5, 10.5, 12.5, 14.5, 16.5, 18.5, 20.5, 22.5,
-			], // relative to reset
-			min: 15, // minutes
-			average: 20,
-			max: 25, // minutes
-		},
-		{
-			id: 1,
-			release: "Season 5",
-			name: "Dragonstorm (private)",
-			group: "Eye of the North",
-			waypoint: "[&BMIDAAA=]",
-			type: "Boss",
-			times: [], // relative to reset
-			min: 5, // minutes
-			average: 7,
-			max: 10, // minutes
-		},
-	],
+	metas: [],
 }));
 
 Alpine.store("global", {
@@ -323,3 +267,17 @@ Alpine.store("global", {
 });
 
 Alpine.start();
+
+async function getDataJson(url) {
+	try {
+		const response = await fetch(url);
+		if (!response.ok) {
+			throw new Error(`Response status: ${response.status}`);
+		}
+
+		const json = await response.json();
+		return json;
+	} catch (error) {
+		console.error(error.message);
+	}
+}

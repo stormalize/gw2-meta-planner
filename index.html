@@ -17,7 +17,8 @@
 		<script type="importmap">
 			{
 				"imports": {
-					"alpinejs": "https://unpkg.com/alpinejs@3.14.1/dist/module.esm.js"
+					"alpinejs": "https://unpkg.com/alpinejs@3.14.1/dist/module.esm.js",
+					"alpinejs-persist": "https://unpkg.com/@alpinejs/persist@3.14.1/dist/module.esm.js"
 				}
 			}
 		</script>
@@ -39,13 +40,19 @@
 					<div class="control">
 						<label for="manual-entry">Add Unscheduled Meta Event</label>
 						<div class="manual-entry">
-							<select x-model="unscheduledMetaForm.meta" id="manual-entry">
+							<select
+								x-model.number="unscheduledMetaForm.meta"
+								id="manual-entry"
+							>
 								<template
 									x-for="[name, metas] in Object.entries(unscheduledMetas)"
 								>
 									<optgroup :label="name">
 										<template x-for="meta in metas">
-											<option :value="meta.id" x-text="meta.name"></option>
+											<option
+												:value="meta.id"
+												x-text="`${meta.name} (max ${meta.max}m)`"
+											></option>
 										</template>
 									</optgroup>
 								</template>
@@ -56,12 +63,12 @@
 								id="manual-entry-time"
 								type="time"
 								step="900"
-								@change="console.log(event.target.value)"
 							/>
 							<ul>
 								<template x-for="(route, i) in routes">
 									<li>
 										<button
+											@click="handleUnscheduledAdd(i)"
 											:title="`Add to ${route.name} route`"
 											x-text="`+ ${route.name ? route.name : `unnamed [${i}]`}`"
 										></button>
@@ -79,7 +86,7 @@
 						<div class="content">
 							<ul class="meta-grid clock">
 								<li class="timezone">
-									<p class="title" x-text="`GMT`"></p>
+									<p class="title" x-text="`Local`"></p>
 									<ul>
 										<template x-for="i in 96">
 											<li
@@ -126,7 +133,7 @@
 																	<dt>Min</dt>
 																	<dd x-text="meta.min"></dd>
 																	<dt>Avg</dt>
-																	<dd x-text="meta.average"></dd>
+																	<dd x-text="meta.avg"></dd>
 																	<dt>Max</dt>
 																	<dd x-text="meta.max"></dd>
 																</dl>
@@ -217,7 +224,7 @@
 														<li>
 															<button
 																class="icon-button"
-																@click="resetMetaEstimate(i, index, meta.average)"
+																@click="resetMetaEstimate(i, index, meta.avg)"
 																aria-label="reset time estimate to average"
 																title="Reset time estimate to average"
 															>

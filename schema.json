@@ -1,0 +1,70 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"title": "Meta Planner Data",
+	"description": "List of metas that will be loaded into the main application",
+	"required": ["metas"],
+	"properties": {
+		"metas": {
+			"type": "array",
+			"description": "Actual list of metas",
+			"items": {
+				"type": "object",
+				"description": "Individual meta event",
+				"required": [
+					"id",
+					"name",
+					"release",
+					"group",
+					"waypoint",
+					"times",
+					"min",
+					"avg",
+					"max"
+				],
+				"properties": {
+					"id": {
+						"type": "integer",
+						"description": "Internal reference number, each meta should be unique"
+					},
+					"name": {
+						"type": "string",
+						"description": "Actual meta title"
+					},
+					"release": {
+						"type": "string",
+						"description": "Release that has the meta, primary grouping mechanism"
+					},
+					"group": {
+						"type": "string",
+						"description": "Map or other secondary grouping mechanism under Release, will be used to sort metas into columns"
+					},
+					"waypoint": {
+						"type": "string",
+						"description": "Chat code for nearest waypoint, including brackets"
+					},
+					"times": {
+						"type": "array",
+						"description": "Reset-based schedule for when this event occurs and how often. If no times are listed, the event is considered 'non-scheduled' and may be started on-demand",
+						"items": {
+							"type": "number",
+							"description": "Number of hours from reset when an instance of the event starts"
+						}
+					},
+					"min": {
+						"type": "integer",
+						"description": "Fastest time to complete the event"
+					},
+					"avg": {
+						"type": "integer",
+						"description": "Average time to complete the event"
+					},
+					"max": {
+						"type": "integer",
+						"description": "Slowest time to complete the event"
+					}
+				}
+			}
+		}
+	}
+}
