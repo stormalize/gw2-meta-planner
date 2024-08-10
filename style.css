@@ -89,6 +89,17 @@ button {
 	}
 }
 
+.howto {
+	padding: 0.5rem 0.5rem 0;
+	& > ul {
+		margin-block: 1rem;
+
+		& > li:not(:first-child) {
+			margin-top: 0.5rem;
+		}
+	}
+}
+
 .icon-button {
 	line-height: 1;
 }
