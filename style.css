@@ -11,6 +11,13 @@ html {
 	--color-ref-raspberry: #6e1732;
 	--color-ref-sunlight: #dab927;
 	--color-ref-brass: #645c11;
+
+	--color-ref-release-core: #960303;
+	--color-ref-release-hot: #008d00;
+	--color-ref-release-pof: #8a0251;
+	--color-ref-release-ibs: #2898e2;
+	--color-ref-release-eod: #0ccac1;
+	--color-ref-release-soto: #caaf14;
 }
 
 *,
@@ -88,7 +95,7 @@ button {
 
 .layout {
 	display: grid;
-	width: 100vw;
+	width: 100%;
 	grid-template-columns: max-content 1fr max-content;
 	/* position: relative; */
 }
@@ -418,10 +425,12 @@ input[type="number"] {
 	font-size: 0.75rem;
 	border: 1px solid color-mix(in oklab, var(--color-sys-fg), transparent 75%);
 	grid-row-end: span 4;
-	background-image: linear-gradient(
-		var(--meta--accent-color, transparent),
-		var(--meta--accent-color, transparent)
+	--meta-bg-color: color-mix(
+		in oklab,
+		var(--meta--accent-color, transparent) 20%,
+		transparent
 	);
+	background-image: linear-gradient(var(--meta-bg-color), var(--meta-bg-color));
 	background-position: left center;
 	background-size: 0.5rem 100%;
 	background-repeat: no-repeat;
@@ -492,7 +501,31 @@ input[type="number"] {
 		}
 	}
 
-	&[data-release="Heart of Thorns"] {
-		--meta--accent-color: rgb(0 128 0 / 0.2);
+	&[data-release="Core"],
+	&[data-release="Season 1"],
+	&[data-release="Season 2"] {
+		--meta--accent-color: var(--color-ref-release-core);
+	}
+
+	&[data-release="Heart of Thorns"],
+	&[data-release="Season 3"] {
+		--meta--accent-color: var(--color-ref-release-hot);
+	}
+
+	&[data-release="Path of Fire"],
+	&[data-release="Season 4"] {
+		--meta--accent-color: var(--color-ref-release-pof);
+	}
+
+	&[data-release="Icebrood Saga"] {
+		--meta--accent-color: var(--color-ref-release-ibs);
+	}
+
+	&[data-release="End of Dragons"] {
+		--meta--accent-color: var(--color-ref-release-eod);
+	}
+
+	&[data-release="Secrets of the Obscure"] {
+		--meta--accent-color: var(--color-ref-release-soto);
 	}
 }
