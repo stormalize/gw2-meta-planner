@@ -104,7 +104,7 @@ Alpine.data("gw2MetaPlanner", () => ({
 		time: "00:00",
 	},
 	routes: Alpine.$persist([
-		{ name: "Demo", metas: [{ id: 1, time: 1, duration: 25 }] },
+		{ name: "Main", metas: [{ id: 1, time: 1, duration: 25 }] },
 	]), // list of ids
 	get releases() {
 		// skip unscheduled metas, i.e. with no times listed
