@@ -5,16 +5,6 @@ Alpine.plugin(persist);
 
 const data = await getDataJson("./data.json");
 
-/**
- * TODO:
- *
- * 1. add importer parser -- support dropping a json file or url import, make sure to sanitize
- * 2. save state to local storage?
- * 3. Each data point in a section should have an individual "reroll" and "lock/unlock" button in the ui
- * 4. sections, instruments, etc. should have a lock as well
- * 5. button to duplicate any section as well as add a new one to end?
- */
-
 Alpine.data("gw2MetaPlanner", () => ({
 	init() {
 		this.$nextTick(() => {
