@@ -390,7 +390,7 @@ input[type="number"] {
 		align-self: end;
 		position: sticky;
 		top: 0;
-		background-color: var(--color-sys-bg);
+		background-color: var(--color-sys-surface);
 
 		& > input {
 			flex: 1 1;
@@ -517,7 +517,7 @@ input[type="number"] {
 		--meta--accent-color: var(--color-ref-release-pof);
 	}
 
-	&[data-release="Icebrood Saga"] {
+	&[data-release="The Icebrood Saga"] {
 		--meta--accent-color: var(--color-ref-release-ibs);
 	}
 
