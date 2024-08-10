@@ -2,7 +2,7 @@
 
 Rough prototype built with alpine.js.
 
-There are some unscheduled metas that are not currently in the list, as they cannot be predictably started (like private convergences, for example).
+There are some unscheduled metas available in the list (like private convergences, for example) that may be started on demand, but others that cannot be (like Sandswept Isles) are currently intentionally left out.
 
 - Built around a CSS grid that represents a full daily reset cycle, with rows for 5 minute increments
 - Data is managed in `data.json`, described by `schema.json`
