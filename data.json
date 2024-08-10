@@ -375,7 +375,7 @@
 			"max": 15
 		},
 		{
-			"id": 32,
+			"id": 31,
 			"release": "Heart of Thorns",
 			"name": "Prep + Chak Gerent",
 			"group": "Tangled Depths",
@@ -389,7 +389,7 @@
 			"max": 20
 		},
 		{
-			"id": 33,
+			"id": 32,
 			"release": "Heart of Thorns",
 			"name": "Dragon's Stand",
 			"group": "Dragon's Stand",
@@ -402,7 +402,7 @@
 			"max": 120
 		},
 		{
-			"id": 34,
+			"id": 33,
 			"release": "Season 3",
 			"name": "Noran's Homestead",
 			"group": "Lake Doric",
@@ -415,7 +415,7 @@
 			"max": 30
 		},
 		{
-			"id": 35,
+			"id": 34,
 			"release": "Season 3",
 			"name": "Saidra's Haven",
 			"group": "Lake Doric",
@@ -426,7 +426,7 @@
 			"max": 45
 		},
 		{
-			"id": 36,
+			"id": 35,
 			"release": "Season 3",
 			"name": "New Loamhurst",
 			"group": "Lake Doric",
@@ -440,7 +440,7 @@
 			"max": 45
 		},
 		{
-			"id": 37,
+			"id": 36,
 			"release": "Path of Fire",
 			"name": "Casino Blitz",
 			"group": "Crystal Oasis",
@@ -454,7 +454,7 @@
 			"max": 15
 		},
 		{
-			"id": 38,
+			"id": 37,
 			"release": "Path of Fire",
 			"name": "Piñata",
 			"group": "Crystal Oasis",
@@ -468,7 +468,7 @@
 			"max": 10
 		},
 		{
-			"id": 39,
+			"id": 38,
 			"release": "Path of Fire",
 			"name": "Buried Treasure",
 			"group": "Desert Highlands",
@@ -479,7 +479,7 @@
 			"max": 20
 		},
 		{
-			"id": 40,
+			"id": 39,
 			"release": "Path of Fire",
 			"name": "Path to Ascension",
 			"group": "Elon Riverlands",
@@ -492,7 +492,7 @@
 			"max": 25
 		},
 		{
-			"id": 41,
+			"id": 40,
 			"release": "Path of Fire",
 			"name": "Doppelganger",
 			"group": "Elon Riverlands",
@@ -506,7 +506,7 @@
 			"max": 20
 		},
 		{
-			"id": 42,
+			"id": 41,
 			"release": "Path of Fire",
 			"name": "Junundu Rising",
 			"group": "The Desolation",
@@ -520,7 +520,7 @@
 			"max": 20
 		},
 		{
-			"id": 43,
+			"id": 42,
 			"release": "Path of Fire",
 			"name": "Maws of Torment",
 			"group": "The Desolation",
@@ -531,7 +531,7 @@
 			"max": 20
 		},
 		{
-			"id": 44,
+			"id": 43,
 			"release": "Path of Fire",
 			"name": "Forged with Fire",
 			"group": "Domain of Vabbi",
@@ -545,7 +545,7 @@
 			"max": 30
 		},
 		{
-			"id": 45,
+			"id": 44,
 			"release": "Path of Fire",
 			"name": "Serpent's Ire",
 			"group": "Domain of Vabbi",
@@ -558,7 +558,7 @@
 			"max": 30
 		},
 		{
-			"id": 46,
+			"id": 45,
 			"release": "Season 4",
 			"name": "Awakened Invasion",
 			"group": "Awakened Invasion",
@@ -572,7 +572,7 @@
 			"max": 15
 		},
 		{
-			"id": 47,
+			"id": 46,
 			"release": "Season 4",
 			"name": "Palawadan",
 			"group": "Domain of Istan",
@@ -586,7 +586,7 @@
 			"max": 30
 		},
 		{
-			"id": 48,
+			"id": 47,
 			"release": "Season 4",
 			"name": "DBS Escorts",
 			"group": "Jahai Bluffs",
@@ -597,7 +597,7 @@
 			"max": 15
 		},
 		{
-			"id": 49,
+			"id": 48,
 			"release": "Season 4",
 			"name": "Death-Branded Shatterer",
 			"group": "Jahai Bluffs",
@@ -611,7 +611,7 @@
 			"max": 15
 		},
 		{
-			"id": 50,
+			"id": 49,
 			"release": "Season 4",
 			"name": "The Oil Floes",
 			"group": "Thunderhead Peaks",
@@ -625,7 +625,7 @@
 			"max": 15
 		},
 		{
-			"id": 51,
+			"id": 50,
 			"release": "Season 4",
 			"name": "Thunderhead Keep",
 			"group": "Thunderhead Peaks",
@@ -639,7 +639,7 @@
 			"max": 20
 		},
 		{
-			"id": 52,
+			"id": 51,
 			"release": "The Icebrood Saga",
 			"name": "Effigy",
 			"group": "Grothmar Valley",
@@ -653,7 +653,7 @@
 			"max": 15
 		},
 		{
-			"id": 53,
+			"id": 52,
 			"release": "The Icebrood Saga",
 			"name": "Doomlore Shrine",
 			"group": "Grothmar Valley",
@@ -667,7 +667,7 @@
 			"max": 20
 		},
 		{
-			"id": 54,
+			"id": 53,
 			"release": "The Icebrood Saga",
 			"name": "Ooze Pits",
 			"group": "Grothmar Valley",
@@ -681,7 +681,7 @@
 			"max": 20
 		},
 		{
-			"id": 55,
+			"id": 54,
 			"release": "The Icebrood Saga",
 			"name": "Metal Concert",
 			"group": "Grothmar Valley",
@@ -695,7 +695,7 @@
 			"max": 15
 		},
 		{
-			"id": 56,
+			"id": 55,
 			"release": "The Icebrood Saga",
 			"name": "Storms of Winter",
 			"group": "Bjora Marches",
@@ -706,7 +706,7 @@
 			"max": 20
 		},
 		{
-			"id": 57,
+			"id": 56,
 			"release": "The Icebrood Saga",
 			"name": "Drakkar",
 			"group": "Bjora Marches",
@@ -720,7 +720,7 @@
 			"max": 35
 		},
 		{
-			"id": 58,
+			"id": 57,
 			"release": "The Icebrood Saga",
 			"name": "Defend Jora's Keep",
 			"group": "Bjora Marches",
@@ -734,7 +734,7 @@
 			"max": 15
 		},
 		{
-			"id": 59,
+			"id": 58,
 			"release": "The Icebrood Saga",
 			"name": "Dragonstorm (private)",
 			"group": "Dragonstorm",
@@ -745,7 +745,7 @@
 			"max": 20
 		},
 		{
-			"id": 60,
+			"id": 59,
 			"release": "The Icebrood Saga",
 			"name": "Dragonstorm (public)",
 			"group": "Dragonstorm",
@@ -756,7 +756,7 @@
 			"max": 20
 		},
 		{
-			"id": 61,
+			"id": 60,
 			"release": "End of Dragons",
 			"name": "Aetherblade Assault",
 			"group": "Seitung Province",
@@ -769,7 +769,7 @@
 			"max": 30
 		},
 		{
-			"id": 62,
+			"id": 61,
 			"release": "End of Dragons",
 			"name": "Kaineng Blackout",
 			"group": "New Kaineng City",
@@ -780,7 +780,7 @@
 			"max": 40
 		},
 		{
-			"id": 63,
+			"id": 62,
 			"release": "End of Dragons",
 			"name": "Gang War",
 			"group": "The Echovald Wilds",
@@ -793,7 +793,7 @@
 			"max": 35
 		},
 		{
-			"id": 64,
+			"id": 63,
 			"release": "End of Dragons",
 			"name": "Battle for the Jade Sea",
 			"group": "Dragon's End",
@@ -804,7 +804,7 @@
 			"max": 60
 		},
 		{
-			"id": 65,
+			"id": 64,
 			"release": "Secrets of the Obscure",
 			"name": "Unlocking the Wizard's Tower",
 			"group": "Skywatch Archipelago",
@@ -815,7 +815,7 @@
 			"max": 25
 		},
 		{
-			"id": 66,
+			"id": 65,
 			"release": "Secrets of the Obscure",
 			"name": "Convergence (private)",
 			"group": "Wizard's Tower",
@@ -826,7 +826,7 @@
 			"max": 30
 		},
 		{
-			"id": 67,
+			"id": 66,
 			"release": "Secrets of the Obscure",
 			"name": "Convergence (private)",
 			"group": "Wizard's Tower",
@@ -837,7 +837,7 @@
 			"max": 30
 		},
 		{
-			"id": 68,
+			"id": 67,
 			"release": "Secrets of the Obscure",
 			"name": "Defense of Amnytas",
 			"group": "Amnytas",
