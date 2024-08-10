@@ -5,48 +5,352 @@
 			"id": 0,
 			"release": "Core",
 			"name": "Triple Trouble (guild)",
-			"group": "World Bosses",
-			"waypoint": "[&BMIDAAA=]",
+			"group": "Hard World Bosses",
+			"waypoint": "[&BKoBAAA=]",
 			"times": [],
-			"min": 5,
-			"avg": 7,
-			"max": 10
+			"min": 10,
+			"avg": 15,
+			"max": 15
 		},
 		{
 			"id": 1,
 			"release": "Core",
-			"name": "The Shatterer",
-			"group": "World Bosses",
-			"waypoint": "[&BE4DAAA=]",
-			"times": [1],
-			"min": 5,
-			"avg": 10,
-			"max": 15
+			"name": "Triple Trouble",
+			"group": "Hard World Bosses",
+			"waypoint": "[&BKoBAAA=]",
+			"times": [1, 4, 8, 12.5, 17, 20],
+			"min": 20,
+			"avg": 25,
+			"max": 30
 		},
 		{
 			"id": 2,
 			"release": "Core",
-			"name": "Svanir Shaman",
-			"group": "World Bosses",
-			"waypoint": "[&BMIDAAA=]",
-			"times": [0.25, 2.25],
-			"min": 5,
-			"avg": 7,
-			"max": 10
+			"name": "Karka Queen (guild)",
+			"group": "Hard World Bosses",
+			"waypoint": "[&BNUGAAA=]",
+			"times": [],
+			"min": 10,
+			"avg": 10,
+			"max": 15
 		},
 		{
 			"id": 3,
+			"release": "Core",
+			"name": "Karka Queen",
+			"group": "Hard World Bosses",
+			"waypoint": "[&BNUGAAA=]",
+			"times": [2, 6, 10.5, 15, 19, 23],
+			"min": 15,
+			"avg": 20,
+			"max": 30
+		},
+		{
+			"id": 4,
+			"release": "Core",
+			"name": "Tequatl the Sunless (guild)",
+			"group": "Hard World Bosses",
+			"waypoint": "[&BNABAAA=]",
+			"times": [],
+			"min": 10,
+			"avg": 15,
+			"max": 25
+		},
+		{
+			"id": 5,
+			"release": "Core",
+			"name": "Tequatl the Sunless",
+			"group": "Hard World Bosses",
+			"waypoint": "[&BNABAAA=]",
+			"times": [0, 3, 7, 11.5, 16, 19],
+			"min": 10,
+			"avg": 20,
+			"max": 25
+		},
+		{
+			"id": 6,
+			"release": "Core",
+			"name": "Admiral Taidha Covington",
+			"group": "World Bosses",
+			"waypoint": "[&BKgBAAA=]",
+			"times": [0, 3, 6, 9, 12, 15, 18, 21],
+			"min": 10,
+			"avg": 15,
+			"max": 15
+		},
+		{
+			"id": 7,
+			"release": "Core",
+			"name": "Svanir Shaman",
+			"group": "World Bosses",
+			"waypoint": "[&BMIDAAA=]",
+			"times": [
+				0.25, 2.25, 4.25, 6.25, 8.25, 10.25, 12.25, 14.25, 16.25, 18.25, 20.25,
+				22.25
+			],
+			"min": 10,
+			"avg": 15,
+			"max": 15
+		},
+		{
+			"id": 8,
+			"release": "Core",
+			"name": "Megadestroyer",
+			"group": "World Bosses",
+			"waypoint": "[&BM0CAAA=]",
+			"times": [0.5, 3.5, 6.5, 9.5, 12.5, 15.5, 18.5, 21.5],
+			"min": 10,
+			"avg": 15,
+			"max": 15
+		},
+		{
+			"id": 9,
+			"release": "Core",
+			"name": "Fire Elemental",
+			"group": "World Bosses",
+			"waypoint": "[&BEcAAAA=]",
+			"times": [
+				0.75, 2.75, 4.75, 6.75, 8.75, 10.75, 12.75, 14.75, 16.75, 18.75, 20.75,
+				22.75
+			],
+			"min": 10,
+			"avg": 15,
+			"max": 15
+		},
+		{
+			"id": 10,
+			"release": "Core",
+			"name": "The Shatterer",
+			"group": "World Bosses",
+			"waypoint": "[&BE4DAAA=]",
+			"times": [1, 4, 7, 10, 13, 16, 19, 22],
+			"min": 10,
+			"avg": 15,
+			"max": 15
+		},
+		{
+			"id": 11,
+			"release": "Core",
+			"name": "Great Jungle Wurm",
+			"group": "World Bosses",
+			"waypoint": "[&BEEFAAA=]",
+			"times": [
+				1.25, 3.25, 5.25, 7.25, 9.25, 11.25, 13.25, 15.25, 17.25, 19.25, 21.25,
+				23.25
+			],
+			"min": 10,
+			"avg": 15,
+			"max": 15
+		},
+		{
+			"id": 12,
+			"release": "Core",
+			"name": "Modniir Ulgoth",
+			"group": "World Bosses",
+			"waypoint": "[&BLAAAAA=]",
+			"times": [1.5, 4.5, 7.5, 10.5, 13.5, 16.5, 19.5, 22.5],
+			"min": 10,
+			"avg": 15,
+			"max": 15
+		},
+		{
+			"id": 13,
+			"release": "Core",
+			"name": "Shadow Behemoth",
+			"group": "World Bosses",
+			"waypoint": "[&BPcAAAA=]",
+			"times": [
+				1.75, 3.75, 5.75, 7.75, 9.75, 11.75, 13.75, 15.75, 17.75, 19.75, 21.75,
+				23.75
+			],
+			"min": 10,
+			"avg": 15,
+			"max": 15
+		},
+		{
+			"id": 14,
+			"release": "Core",
+			"name": "Golem Mark II",
+			"group": "World Bosses",
+			"waypoint": "[&BNQCAAA=]",
+			"times": [2, 5, 8, 11, 14, 17, 20, 23],
+			"min": 10,
+			"avg": 15,
+			"max": 15
+		},
+		{
+			"id": 15,
+			"release": "Core",
+			"name": "Claw of Jormag",
+			"group": "World Bosses",
+			"waypoint": "[&BHoCAAA=]",
+			"times": [2.5, 5.5, 8.5, 11.5, 14.5, 17.5, 20.5, 23.5],
+			"min": 10,
+			"avg": 15,
+			"max": 15
+		},
+		{
+			"id": 16,
+			"release": "Core",
+			"name": "Anomaly: Timberline Falls",
+			"group": "Ley-Line Anomaly",
+			"waypoint": "[&BEwCAAA=]",
+			"times": [0.333, 6.333, 12.333, 18.333],
+			"min": 10,
+			"avg": 15,
+			"max": 20
+		},
+		{
+			"id": 17,
+			"release": "Core",
+			"name": "Anomaly: Iron Marches",
+			"group": "Ley-Line Anomaly",
+			"waypoint": "[&BOcBAAA=]",
+			"times": [2.333, 8.333, 14.333, 20.333],
+			"min": 10,
+			"avg": 15,
+			"max": 20
+		},
+		{
+			"id": 18,
+			"release": "Core",
+			"name": "Anomaly: Gendarran Fields",
+			"group": "Ley-Line Anomaly",
+			"waypoint": "[&BOQAAAA=]",
+			"times": [4.333, 10.333, 16.333, 22.333],
+			"min": 10,
+			"avg": 15,
+			"max": 20
+		},
+		{
+			"id": 19,
 			"release": "Season 1",
-			"name": "Twisted Marionette (Public)",
+			"name": "Twisted Marionette (private)",
 			"group": "Eye of the North",
 			"waypoint": "[&BAkMAAA=]",
-			"times": [0],
+			"times": [],
+			"min": 15,
+			"avg": 15,
+			"max": 20
+		},
+		{
+			"id": 20,
+			"release": "Season 1",
+			"name": "Twisted Marionette (public)",
+			"group": "Eye of the North",
+			"waypoint": "[&BAkMAAA=]",
+			"times": [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22],
+			"min": 15,
+			"avg": 15,
+			"max": 20
+		},
+		{
+			"id": 21,
+			"release": "Season 1",
+			"name": "Tower of Nightmares",
+			"group": "Eye of the North",
+			"waypoint": "[&BAkMAAA=]",
+			"times": [
+				1.5, 3.5, 5.5, 7.5, 9.5, 11.5, 13.5, 15.5, 17.5, 19.5, 21.5, 23.5
+			],
+			"min": 15,
+			"avg": 15,
+			"max": 20
+		},
+		{
+			"id": 22,
+			"release": "Season 1",
+			"name": "Battle for Lion's Arch (private)",
+			"group": "Eye of the North",
+			"waypoint": "[&BAkMAAA=]",
+			"times": [],
+			"min": 15,
+			"avg": 15,
+			"max": 20
+		},
+		{
+			"id": 23,
+			"release": "Season 1",
+			"name": "Battle for Lion's Arch (public)",
+			"group": "Eye of the North",
+			"waypoint": "[&BAkMAAA=]",
+			"times": [
+				0.5, 2.5, 4.5, 6.5, 8.5, 10.5, 12.5, 14.5, 16.5, 18.5, 20.5, 22.5
+			],
+			"min": 15,
+			"avg": 15,
+			"max": 20
+		},
+		{
+			"id": 24,
+			"release": "Season 1",
+			"name": "Defeat Scarlet's Minions",
+			"group": "Scarlet's Invasion",
+			"waypoint": "[&BOQAAAA=]",
+			"times": [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23],
 			"min": 5,
 			"avg": 10,
 			"max": 15
 		},
 		{
-			"id": 4,
+			"id": 25,
+			"release": "Season 2",
+			"name": "Crash Site",
+			"group": "Dry Top",
+			"waypoint": "[&BIAHAAA=]",
+			"times": [
+				0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+				20, 21, 22, 23
+			],
+			"min": 40,
+			"avg": 40,
+			"max": 40
+		},
+		{
+			"id": 26,
+			"release": "Season 2",
+			"name": "Sandstorm",
+			"group": "Dry Top",
+			"waypoint": "[&BIAHAAA=]",
+			"times": [
+				0.667, 1.667, 2.667, 3.667, 4.667, 5.667, 6.667, 7.667, 8.667, 9.667,
+				10.667, 11.667, 12.667, 13.667, 14.667, 15.667, 16.667, 17.667, 18.667,
+				19.667, 20.667, 21.667, 22.667, 23.667
+			],
+			"min": 20,
+			"avg": 20,
+			"max": 20
+		},
+		{
+			"id": 27,
+			"release": "Heart of Thorns",
+			"name": "Night",
+			"group": "Verdant Brink",
+			"waypoint": "[&BN4HAAA=]",
+			"times": [
+				1.75, 3.75, 5.75, 7.75, 9.75, 11.75, 13.75, 15.75, 17.75, 19.75, 21.75,
+				23.75
+			],
+			"min": 15,
+			"avg": 15,
+			"max": 15
+		},
+		{
+			"id": 28,
+			"release": "Heart of Thorns",
+			"name": "Night Bosses",
+			"group": "Verdant Brink",
+			"waypoint": "[&BAgIAAA=]",
+			"times": [
+				0.167, 2.167, 4.167, 6.167, 8.167, 10.167, 12.167, 14.167, 16.167,
+				18.167, 20.167, 22.167
+			],
+			"min": 15,
+			"avg": 15,
+			"max": 15
+		},
+		{
+			"id": 29,
 			"release": "Heart of Thorns",
 			"name": "Octovine",
 			"group": "Auric Basin",
@@ -57,20 +361,152 @@
 			"max": 20
 		},
 		{
-			"id": 5,
+			"id": 30,
 			"release": "Heart of Thorns",
-			"name": "Chak Gerent",
+			"name": "Challenges",
+			"group": "Auric Basin",
+			"waypoint": "[&BAIIAAA=]",
+			"times": [
+				0.75, 2.75, 4.75, 6.75, 8.75, 10.75, 12.75, 14.75, 16.75, 18.75, 20.75,
+				22.75
+			],
+			"min": 15,
+			"avg": 15,
+			"max": 15
+		},
+		{
+			"id": 32,
+			"release": "Heart of Thorns",
+			"name": "Prep + Chak Gerent",
 			"group": "Tangled Depths",
 			"waypoint": "[&BPUHAAA=]",
 			"times": [
+				0.417, 2.417, 4.417, 6.417, 8.417, 10.417, 12.417, 14.417, 16.417,
+				18.417, 20.417, 22.417
+			],
+			"min": 10,
+			"avg": 15,
+			"max": 20
+		},
+		{
+			"id": 33,
+			"release": "Heart of Thorns",
+			"name": "Dragon's Stand",
+			"group": "Dragon's Stand",
+			"waypoint": "[&BBAIAAA=]",
+			"times": [
+				1.5, 3.5, 5.5, 7.5, 9.5, 11.5, 13.5, 15.5, 17.5, 19.5, 21.5, 23.5
+			],
+			"min": 60,
+			"avg": 90,
+			"max": 120
+		},
+		{
+			"id": 34,
+			"release": "Season 3",
+			"name": "Noran's Homestead",
+			"group": "Lake Doric",
+			"waypoint": "[&BK8JAAA=]",
+			"times": [
 				0.5, 2.5, 4.5, 6.5, 8.5, 10.5, 12.5, 14.5, 16.5, 18.5, 20.5, 22.5
+			],
+			"min": 15,
+			"avg": 20,
+			"max": 30
+		},
+		{
+			"id": 35,
+			"release": "Season 3",
+			"name": "Saidra's Haven",
+			"group": "Lake Doric",
+			"waypoint": "[&BK0JAAA=]",
+			"times": [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23],
+			"min": 20,
+			"avg": 25,
+			"max": 45
+		},
+		{
+			"id": 36,
+			"release": "Season 3",
+			"name": "New Loamhurst",
+			"group": "Lake Doric",
+			"waypoint": "[&BLQJAAA=]",
+			"times": [
+				1.75, 3.75, 5.75, 7.75, 9.75, 11.75, 13.75, 15.75, 17.75, 19.75, 21.75,
+				23.75
+			],
+			"min": 20,
+			"avg": 25,
+			"max": 45
+		},
+		{
+			"id": 37,
+			"release": "Path of Fire",
+			"name": "Casino Blitz",
+			"group": "Crystal Oasis",
+			"waypoint": "[&BLsKAAA=]",
+			"times": [
+				0.083, 2.083, 4.083, 6.083, 8.083, 10.083, 12.083, 14.083, 16.083,
+				18.083, 20.083, 22.083
+			],
+			"min": 15,
+			"avg": 15,
+			"max": 15
+		},
+		{
+			"id": 38,
+			"release": "Path of Fire",
+			"name": "Piñata",
+			"group": "Crystal Oasis",
+			"waypoint": "[&BLsKAAA=]",
+			"times": [
+				0.333, 2.333, 4.333, 6.333, 8.333, 10.333, 12.333, 14.333, 16.333,
+				18.333, 20.333, 22.333
+			],
+			"min": 5,
+			"avg": 10,
+			"max": 10
+		},
+		{
+			"id": 39,
+			"release": "Path of Fire",
+			"name": "Buried Treasure",
+			"group": "Desert Highlands",
+			"waypoint": "[&BGsKAAA=]",
+			"times": [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23],
+			"min": 20,
+			"avg": 20,
+			"max": 20
+		},
+		{
+			"id": 40,
+			"release": "Path of Fire",
+			"name": "Path to Ascension",
+			"group": "Elon Riverlands",
+			"waypoint": "[&BFMKAAA=]",
+			"times": [
+				1.5, 3.5, 5.5, 7.5, 9.5, 11.5, 13.5, 15.5, 17.5, 19.5, 21.5, 23.5
 			],
 			"min": 15,
 			"avg": 20,
 			"max": 25
 		},
 		{
-			"id": 6,
+			"id": 41,
+			"release": "Path of Fire",
+			"name": "Doppelganger",
+			"group": "Elon Riverlands",
+			"waypoint": "[&BFMKAAA=]",
+			"times": [
+				0, 1.917, 3.917, 5.917, 7.917, 9.917, 11.917, 13.917, 15.917, 17.917,
+				19.917, 21.917
+			],
+			"min": 10,
+			"avg": 15,
+			"max": 20
+		},
+		{
+			"id": 12,
 			"release": "Season 5",
 			"name": "Dragonstorm (private)",
 			"group": "Eye of the North",
@@ -79,17 +515,6 @@
 			"min": 5,
 			"avg": 7,
 			"max": 15
-		},
-		{
-			"id": 7,
-			"release": "Core",
-			"name": "Anomaly: Timberline Falls",
-			"group": "Ley-Line Anomaly",
-			"waypoint": "[&BEwCAAA=]",
-			"times": [0.667],
-			"min": 5,
-			"avg": 7,
-			"max": 10
 		}
 	]
 }
