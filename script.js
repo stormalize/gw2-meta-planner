@@ -3,7 +3,7 @@ import persist from "alpinejs-persist";
 
 Alpine.plugin(persist);
 
-const data = await getDataJson("/data.json");
+const data = await getDataJson("./data.json");
 
 /**
  * TODO:
@@ -104,7 +104,7 @@ Alpine.data("gw2MetaPlanner", () => ({
 		time: "00:00",
 	},
 	routes: Alpine.$persist([
-		{ name: "Demo", metas: [{ id: 1, time: 1, duration: 10 }] },
+		{ name: "Demo", metas: [{ id: 1, time: 1, duration: 25 }] },
 	]), // list of ids
 	get releases() {
 		// skip unscheduled metas, i.e. with no times listed
