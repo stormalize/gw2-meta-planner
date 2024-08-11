@@ -153,7 +153,7 @@ Alpine.data("gw2MetaPlanner", () => ({
 	},
 	prepareRouteMeta(routeMeta) {
 		return (
-			(routeMeta.id && this.findMetaById(routeMeta.id)) || {
+			(typeof routeMeta.id === "number" && this.findMetaById(routeMeta.id)) || {
 				id: false,
 				release: "Unknown",
 				name: "Unknown",
