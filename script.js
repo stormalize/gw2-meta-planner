@@ -151,10 +151,19 @@ Alpine.data("gw2MetaPlanner", () => ({
 		return this.metas.find((meta) => meta.id === id);
 	},
 	prepareRouteMeta(routeMeta) {
-		return {
-			...structuredClone(Alpine.raw(this.findMetaById(routeMeta.id))),
-			...routeMeta,
-		};
+		return (
+			(routeMeta.id && this.findMetaById(routeMeta.id)) || {
+				id: false,
+				release: "Unknown",
+				name: "Unknown",
+				group: "Unknown",
+				waypoint: "???",
+				times: [],
+				min: 0,
+				avg: 0,
+				max: 0,
+			}
+		);
 	},
 	handleUnscheduledAdd(routeId) {
 		const time = this.getResetOffsetFromTime(this.unscheduledMetaForm.time);
