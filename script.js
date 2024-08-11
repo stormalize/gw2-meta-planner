@@ -155,7 +155,13 @@ Alpine.data("gw2MetaPlanner", () => ({
 	addToRoute(routeId, metaId, time) {
 		const metas = this.routes[routeId].metas;
 		const meta = this.findMetaById(metaId);
-		const duration = meta?.avg;
+		const duration = meta?.avg ? meta.avg : meta.max;
+
+		const newLocalTime = this.getLocalTime(time, meta.max);
+		console.log(newLocalTime);
+		if (newLocalTime) {
+			this.unscheduledMetaForm.time = newLocalTime;
+		}
 
 		this.routes[routeId].metas = [
 			...metas,
@@ -230,9 +236,12 @@ Alpine.data("gw2MetaPlanner", () => ({
 	getLocalTimeInMinutes(minutes) {
 		return this.getLocalTime(minutes / 60);
 	},
-	getLocalTime(resetOffset) {
-		const minutes = Math.round((resetOffset % 1) * 60);
-		const hours = Math.floor(resetOffset);
+	getLocalTime(resetOffset, extraMin = false) {
+		const extraMinutes = extraMin ? extraMin % 60 : 0;
+		const extraHours = extraMin ? Math.floor(extraMin / 60) : 0;
+
+		const minutes = Math.round((resetOffset % 1) * 60) + extraMinutes;
+		const hours = Math.floor(resetOffset) + extraHours;
 
 		const date = new Date();
 		date.setUTCHours(hours, minutes, 0, 0);
