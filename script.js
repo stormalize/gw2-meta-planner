@@ -168,7 +168,6 @@ Alpine.data("gw2MetaPlanner", () => ({
 		const duration = meta[timeKey] || meta.max;
 
 		const newLocalTime = this.getLocalTime(time, duration);
-		console.log(newLocalTime);
 		if (newLocalTime) {
 			this.unscheduledMetaForm.time = newLocalTime;
 		}
