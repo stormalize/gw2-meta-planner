@@ -804,6 +804,17 @@
 			"max": 60
 		},
 		{
+			"id": 68,
+			"release": "End of Dragons",
+			"name": "The Jade Crisis",
+			"group": "Gyala Delve",
+			"waypoint": "[&BKoNAAA=]",
+			"times": [],
+			"min": 25,
+			"avg": 35,
+			"max": 40
+		},
+		{
 			"id": 64,
 			"release": "Secrets of the Obscure",
 			"name": "Unlocking the Wizard's Tower",
@@ -817,7 +828,7 @@
 		{
 			"id": 65,
 			"release": "Secrets of the Obscure",
-			"name": "Convergence (private)",
+			"name": "Convergence (public)",
 			"group": "Wizard's Tower",
 			"waypoint": "[&BB8OAAA=]",
 			"times": [1.5, 4.5, 7.5, 10.5, 13.5, 16.5, 19.5, 22.5],

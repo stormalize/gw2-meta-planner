@@ -11,6 +11,8 @@ html {
 	--color-ref-raspberry: #6e1732;
 	--color-ref-sunlight: #dab927;
 	--color-ref-brass: #645c11;
+	--color-ref-orange: #c25e00;
+	--color-ref-highlighter: #eeff00;
 
 	--color-ref-release-core: #960303;
 	--color-ref-release-hot: #008d00;
@@ -35,6 +37,7 @@ body {
 	--color-sys-accent-1-intense: var(--color-ref-blue);
 	--color-sys-accent-2-muted: var(--color-ref-pink);
 	--color-sys-accent-2-intense: var(--color-ref-raspberry);
+	--color-sys-state-warning: var(--color-ref-orange);
 	font-family: "Noto Sans", sans-serif;
 	font-optical-sizing: auto;
 	font-weight: 400;
@@ -54,6 +57,51 @@ body {
 		--color-sys-accent-2-intense: var(--color-ref-pink); */
 		--color-sys-accent-2-muted: var(--color-ref-brass);
 		--color-sys-accent-2-intense: var(--color-ref-sunlight);
+		--color-sys-state-warning: var(--color-ref-highlighter);
+	}
+
+	&.loading {
+		main {
+			&::before {
+				--gradient-color-1: color-mix(
+					in oklab,
+					var(--color-sys-accent-1-intense) 15%,
+					transparent
+				);
+				--gradient-color-2: color-mix(
+					in oklab,
+					var(--color-sys-accent-1-muted) 15%,
+					transparent
+				);
+				content: "Loading...";
+				text-align: center;
+				display: block;
+				width: 100%;
+				padding: 0.5rem;
+				background-image: linear-gradient(
+					45deg,
+					var(--gradient-color-1) 25%,
+					var(--gradient-color-2) 25%,
+					var(--gradient-color-2) 50%,
+					var(--gradient-color-1) 50%,
+					var(--gradient-color-1) 75%,
+					var(--gradient-color-2) 75%,
+					var(--gradient-color-2)
+				);
+				background-size: 2rem 2rem;
+				animation: 1s linear infinite bgslide;
+			}
+		}
+	}
+}
+
+@keyframes bgslide {
+	from {
+		background-position: top left 0;
+	}
+
+	to {
+		background-position: top left 2rem;
 	}
 }
 
@@ -63,6 +111,23 @@ body {
 
 .material-symbols-outlined.sm {
 	font-size: 1rem;
+}
+
+.material-icon-before::before,
+.material-icon-after::after {
+	content: attr(icon-name);
+	font-family: "Material Symbols Outlined";
+	font-weight: normal;
+	font-style: normal;
+	line-height: 1;
+	letter-spacing: normal;
+	text-transform: none;
+	display: inline-block;
+	white-space: nowrap;
+	word-wrap: normal;
+	direction: ltr;
+	-webkit-font-smoothing: antialiased;
+	vertical-align: -0.2em;
 }
 
 button {
@@ -94,14 +159,26 @@ button {
 	& > ul {
 		margin-block: 1rem;
 
-		& > li:not(:first-child) {
+		& li {
+			max-width: 65ch;
+		}
+
+		& li:not(:first-child) {
 			margin-top: 0.5rem;
+
+			& > ul {
+				margin-block: 0.5rem 1rem;
+			}
 		}
 	}
 }
 
 .icon-button {
 	line-height: 1;
+}
+
+.warning {
+	color: var(--color-sys-state-warning);
 }
 
 .layout {
@@ -129,6 +206,11 @@ input[type="number"] {
 	background: var(--color-sys-surface);
 	color: inherit;
 	font: inherit;
+}
+
+select {
+	min-height: calc(1.25em + 0.5rem);
+	font-size: inherit;
 }
 
 [x-data="gw2MetaPlanner"] {
@@ -452,6 +534,10 @@ input[type="number"] {
 	& .title {
 		grid-area: title;
 		font-weight: 700;
+
+		&::before {
+			margin-inline-end: 0.25em;
+		}
 	}
 
 	& > [x-text="meta.waypoint"] {
@@ -459,9 +545,13 @@ input[type="number"] {
 		margin-inline-start: 0.25rem;
 	}
 
-	& > [x-text="meta.time"] {
+	& > .time {
 		grid-area: time;
 		font-style: italic;
+
+		&.desc {
+			text-decoration: dotted underline;
+		}
 	}
 
 	& > .durations {
@@ -489,7 +579,7 @@ input[type="number"] {
 
 			> input {
 				display: block;
-				width: 7ch;
+				width: 6.5ch;
 				height: 1.25rem;
 			}
 		}

@@ -25,19 +25,37 @@
 		</script>
 		<script type="module" src="script.js"></script>
 	</head>
-	<body x-data="" :class="$store.global.bodyClasses">
+	<body x-data="" class="loading" :class="$store.global.bodyClasses">
 		<h1>GW2 Meta Planner</h1>
 		<div class="howto">
 			<h2>How to Use</h2>
 			<ul>
-				<li>Grid begins at daily reset, times are shown in your local time</li>
+				<li>Grid begins at daily reset, times are shown in your local time.</li>
 				<li>
-					Add additional routes for backup events or compare multiple plans
+					Add additional routes for backup events or compare multiple plans.
 				</li>
-				<li>Your routes are saved across page loads</li>
+				<li>Your routes and settings are saved across page loads.</li>
+				<li>
+					Use the <em>Estimate</em> and <em>Offset</em> options for each event
+					in your route to fine-tune events that might overwise overlap.
+				</li>
 				<li>
 					Adjust your own estimates based on how quickly your group can complete
-					each event
+					each event. Definitions of the provided times:
+					<ul>
+						<li>
+							<strong>Minimum</strong>: large pre-made squad with boons doing
+							high DPS.
+						</li>
+						<li>
+							<strong>Average</strong>: regular map or a small pre-made squad
+							mixed with randoms.
+						</li>
+						<li>
+							<strong>Maximum</strong>: hard limit of the event, usually timers
+							on the event chain that cause the event to fail if they run out.
+						</li>
+					</ul>
 				</li>
 			</ul>
 		</div>
@@ -53,6 +71,17 @@
 						></button>
 					</div>
 					<div class="control">
+						<label for="setting-default-estimate">Default Estimate</label>
+						<select
+							x-model="settings.defaultEstimate"
+							id="setting-default-estimate"
+						>
+							<option value="min">Minimum</option>
+							<option value="avg">Average</option>
+							<option value="max">Maximum</option>
+						</select>
+					</div>
+					<div class="control">
 						<label for="manual-entry">Add Unscheduled Meta Event</label>
 						<div class="manual-entry">
 							<select
@@ -66,7 +95,7 @@
 										<template x-for="meta in metas">
 											<option
 												:value="meta.id"
-												x-text="`${meta.name} (max ${meta.max}m)`"
+												x-text="`${meta.group}: ${meta.name} (max ${meta.max}m)`"
 											></option>
 										</template>
 									</optgroup>
@@ -77,7 +106,7 @@
 								x-model="unscheduledMetaForm.time"
 								id="manual-entry-time"
 								type="time"
-								step="900"
+								step="300"
 							/>
 							<ul>
 								<template x-for="(route, i) in routes">
@@ -142,8 +171,15 @@
 																:style="{gridRowStart: generateRowNumberFromTime(meta.time), gridRowEnd: `span ${meta.max / 5}`}"
 															>
 																<p class="title" x-text="meta.name"></p>
-																<p x-text="getLocalTime(meta.time)"></p>
-																<p x-text="meta.waypoint"></p>
+																<p
+																	class="time"
+																	x-text="getLocalTime(meta.time)"
+																></p>
+																<p
+																	x-text="meta.waypoint"
+																	class="material-icon-before"
+																	icon-name="nearby"
+																></p>
 																<dl class="durations">
 																	<dt>Min</dt>
 																	<dd x-text="meta.min"></dd>
@@ -205,14 +241,36 @@
 													class="meta"
 													:data-release="meta.release"
 													x-data="{meta: prepareRouteMeta(m)}"
-													:style="{gridRowStart: generateRowNumberFromTime(meta.time), gridRowEnd: `span ${generateRowNumberFromMinutes(m.duration)}`}"
+													:style="{gridRowStart: generateRowNumberFromTime(m.time, m.offset), gridRowEnd: `span ${generateRowNumberFromMinutes(m.duration)}`}"
 												>
-													<p class="title" x-text="meta.name"></p>
-													<p x-text="getLocalTime(meta.time)"></p>
-													<p x-text="meta.waypoint"></p>
+													<p
+														class="title"
+														:class="{'material-icon-before': m.offset >= meta.max, 'warning': m.offset >= meta.max}"
+														icon-name="warning"
+														x-text="meta.name"
+														:title="m.offset >= meta.max ? `Warning: offset pushes your event out of the time limit of the event` : false"
+													></p>
+													<p
+														class="time desc material-icon-before"
+														icon-name="schedule"
+														x-text="getLocalTime(m.time)"
+														:title="`Durations: \nMin: ${meta.min}m \nAvg: ${meta.avg}m \nMax: ${meta.max}m`"
+													></p>
+													<p
+														x-text="meta.waypoint"
+														class="material-icon-before"
+														icon-name="nearby"
+													></p>
 													<dl class="durations">
-														<dt>Min</dt>
-														<dd x-text="meta.min"></dd>
+														<dt class="est">Offset</dt>
+														<dd>
+															<input
+																x-model.number="m.offset"
+																step="5"
+																min="0"
+																type="number"
+															/>
+														</dd>
 														<dt class="est" title="Your Estimate">Est</dt>
 														<dd>
 															<input
@@ -220,8 +278,6 @@
 																type="number"
 															/>
 														</dd>
-														<dt>Max</dt>
-														<dd x-text="meta.max"></dd>
 													</dl>
 													<ul class="controls">
 														<li>
@@ -239,9 +295,9 @@
 														<li>
 															<button
 																class="icon-button"
-																@click="resetMetaEstimate(i, index, meta.avg)"
-																aria-label="reset time estimate to average"
-																title="Reset time estimate to average"
+																@click="resetMetaEstimate(i, index, meta)"
+																aria-label="reset offset and estimate to default"
+																title="Reset offset and estimate to default"
 															>
 																<span class="material-symbols-outlined sm"
 																	>history</span

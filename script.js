@@ -9,7 +9,13 @@ Alpine.data("gw2MetaPlanner", () => ({
 	init() {
 		this.$nextTick(() => {
 			this.setupIntersectObserver();
+			Alpine.store("global").toggleLoading();
 		});
+
+		// provide default for settings in case they are missing
+		if (!"defaultEstimate" in this.settings) {
+			this.settings.defaultEstimate = "avg";
+		}
 
 		this.metas = data.metas;
 		this.unscheduledMetaForm.time = this.getLocalTime(0);
@@ -93,8 +99,11 @@ Alpine.data("gw2MetaPlanner", () => ({
 		meta: 0,
 		time: "00:00",
 	},
+	settings: Alpine.$persist({
+		defaultEstimate: "avg",
+	}),
 	routes: Alpine.$persist([
-		{ name: "Main", metas: [{ id: 1, time: 1, duration: 25 }] },
+		{ name: "Main", metas: [{ id: 1, time: 1, duration: 25, offset: 0 }] },
 	]), // list of ids
 	get releases() {
 		// skip unscheduled metas, i.e. with no times listed
@@ -143,28 +152,51 @@ Alpine.data("gw2MetaPlanner", () => ({
 		return this.metas.find((meta) => meta.id === id);
 	},
 	prepareRouteMeta(routeMeta) {
-		return {
-			...structuredClone(Alpine.raw(this.findMetaById(routeMeta.id))),
-			...routeMeta,
-		};
+		return (
+			(typeof routeMeta.id === "number" && this.findMetaById(routeMeta.id)) || {
+				id: false,
+				release: "Unknown",
+				name: "Unknown",
+				group: "Unknown",
+				waypoint: "???",
+				times: [],
+				min: 0,
+				avg: 0,
+				max: 0,
+			}
+		);
 	},
 	handleUnscheduledAdd(routeId) {
 		const time = this.getResetOffsetFromTime(this.unscheduledMetaForm.time);
 		this.addToRoute(routeId, this.unscheduledMetaForm.meta, time);
 	},
 	addToRoute(routeId, metaId, time) {
+		const timeKey = this.settings?.defaultEstimate || "avg";
+
 		const metas = this.routes[routeId].metas;
 		const meta = this.findMetaById(metaId);
-		const duration = meta?.avg;
+		const duration = meta[timeKey] || meta.max;
 
-		this.routes[routeId].metas = [...metas, { id: metaId, time, duration }];
+		const newLocalTime = this.getLocalTime(time, duration);
+		if (newLocalTime) {
+			this.unscheduledMetaForm.time = newLocalTime;
+		}
+
+		this.routes[routeId].metas = [
+			...metas,
+			{ id: metaId, time, duration, offset: 0 },
+		];
 
 		// console.log(this.routes);
 	},
-	resetMetaEstimate(routeId, number, avg) {
+	resetMetaEstimate(routeId, number, meta) {
+		const timeKey = this.settings?.defaultEstimate || "avg";
+		const duration = meta[timeKey] || meta.max;
+
 		const routeMeta = this.routes[routeId].metas[number];
 		if (routeMeta) {
-			routeMeta.duration = avg;
+			routeMeta.duration = duration;
+			routeMeta.offset = 0;
 		}
 	},
 	removeFromRoute(routeId, number) {
@@ -198,9 +230,10 @@ Alpine.data("gw2MetaPlanner", () => ({
 
 		return copies;
 	},
-	generateRowNumberFromTime(time) {
+	generateRowNumberFromTime(time, offsetMinutes) {
+		const offset = offsetMinutes ? Math.ceil(offsetMinutes / 5) : 0;
 		// time is managed in hours from reset
-		const result = time * 12 + 1;
+		const result = time * 12 + 1 + offset;
 		return Math.round(result);
 	},
 	generateRowNumberFromMinutes(duration) {
@@ -225,9 +258,12 @@ Alpine.data("gw2MetaPlanner", () => ({
 	getLocalTimeInMinutes(minutes) {
 		return this.getLocalTime(minutes / 60);
 	},
-	getLocalTime(resetOffset) {
-		const minutes = Math.round((resetOffset % 1) * 60);
-		const hours = Math.floor(resetOffset);
+	getLocalTime(resetOffset, extraMin = false) {
+		const extraMinutes = extraMin ? extraMin % 60 : 0;
+		const extraHours = extraMin ? Math.floor(extraMin / 60) : 0;
+
+		const minutes = Math.round((resetOffset % 1) * 60) + extraMinutes;
+		const hours = Math.floor(resetOffset) + extraHours;
 
 		const date = new Date();
 		date.setUTCHours(hours, minutes, 0, 0);
@@ -246,13 +282,16 @@ Alpine.store("global", {
 	toggleDarkMode() {
 		this.isDarkMode = !this.isDarkMode;
 	},
+	toggleLoading() {
+		this.isLoading = !this.isLoading;
+	},
 	isDarkMode: false,
+	isLoading: true,
 	get bodyClasses() {
-		let classes = [];
-		if (this.isDarkMode) {
-			classes.push("dark-mode");
-		}
-		return classes || "";
+		return {
+			"dark-mode": this.isDarkMode,
+			loading: this.isLoading,
+		};
 	},
 });
 
@@ -271,3 +310,8 @@ async function getDataJson(url) {
 		console.error(error.message);
 	}
 }
+
+document.addEventListener("click", (event) => {
+	if (event.target.closest("[x-text='meta.waypoint']"))
+		window.getSelection().selectAllChildren(event.target);
+});
