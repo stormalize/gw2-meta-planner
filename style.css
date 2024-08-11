@@ -59,6 +59,50 @@ body {
 		--color-sys-accent-2-intense: var(--color-ref-sunlight);
 		--color-sys-state-warning: var(--color-ref-highlighter);
 	}
+
+	&.loading {
+		main {
+			&::before {
+				--gradient-color-1: color-mix(
+					in oklab,
+					var(--color-sys-accent-1-intense) 15%,
+					transparent
+				);
+				--gradient-color-2: color-mix(
+					in oklab,
+					var(--color-sys-accent-1-muted) 15%,
+					transparent
+				);
+				content: "Loading...";
+				text-align: center;
+				display: block;
+				width: 100%;
+				padding: 0.5rem;
+				background-image: linear-gradient(
+					45deg,
+					var(--gradient-color-1) 25%,
+					var(--gradient-color-2) 25%,
+					var(--gradient-color-2) 50%,
+					var(--gradient-color-1) 50%,
+					var(--gradient-color-1) 75%,
+					var(--gradient-color-2) 75%,
+					var(--gradient-color-2)
+				);
+				background-size: 2rem 2rem;
+				animation: 1s linear infinite bgslide;
+			}
+		}
+	}
+}
+
+@keyframes bgslide {
+	from {
+		background-position: top left 0;
+	}
+
+	to {
+		background-position: top left 2rem;
+	}
 }
 
 .material-symbols-outlined.inline {
@@ -115,8 +159,12 @@ button {
 	& > ul {
 		margin-block: 1rem;
 
-		& > li:not(:first-child) {
+		& li:not(:first-child) {
 			margin-top: 0.5rem;
+
+			& > ul {
+				margin-block: 0.5rem 1rem;
+			}
 		}
 	}
 }

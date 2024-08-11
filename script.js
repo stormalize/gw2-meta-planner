@@ -9,6 +9,7 @@ Alpine.data("gw2MetaPlanner", () => ({
 	init() {
 		this.$nextTick(() => {
 			this.setupIntersectObserver();
+			Alpine.store("global").toggleLoading();
 		});
 
 		// provide default for settings in case they are missing
@@ -281,13 +282,16 @@ Alpine.store("global", {
 	toggleDarkMode() {
 		this.isDarkMode = !this.isDarkMode;
 	},
+	toggleLoading() {
+		this.isLoading = !this.isLoading;
+	},
 	isDarkMode: false,
+	isLoading: true,
 	get bodyClasses() {
-		let classes = [];
-		if (this.isDarkMode) {
-			classes.push("dark-mode");
-		}
-		return classes || "";
+		return {
+			"dark-mode": this.isDarkMode,
+			loading: this.isLoading,
+		};
 	},
 });
 
