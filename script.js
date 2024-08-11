@@ -160,6 +160,9 @@ Alpine.data("gw2MetaPlanner", () => ({
 		const time = this.getResetOffsetFromTime(this.unscheduledMetaForm.time);
 		this.addToRoute(routeId, this.unscheduledMetaForm.meta, time);
 	},
+	handleWaypointClick(event) {
+		window.getSelection().selectAllChildren(event.target);
+	},
 	addToRoute(routeId, metaId, time) {
 		const timeKey = this.settings?.defaultEstimate || "avg";
 

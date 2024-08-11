@@ -157,7 +157,12 @@
 																	class="time"
 																	x-text="getLocalTime(meta.time)"
 																></p>
-																<p x-text="meta.waypoint"></p>
+																<p
+																	x-text="meta.waypoint"
+																	class="material-icon-before"
+																	icon-name="nearby"
+																	@click="handleWaypointClick"
+																></p>
 																<dl class="durations">
 																	<dt>Min</dt>
 																	<dd x-text="meta.min"></dd>
@@ -234,7 +239,12 @@
 														x-text="getLocalTime(meta.time)"
 														:title="`Durations: \nMin: ${meta.min}m \nAvg: ${meta.avg}m \nMax: ${meta.max}m`"
 													></p>
-													<p x-text="meta.waypoint"></p>
+													<p
+														x-text="meta.waypoint"
+														class="material-icon-before"
+														icon-name="nearby"
+														@click="handleWaypointClick"
+													></p>
 													<dl class="durations">
 														<dt class="est">Offset</dt>
 														<dd>
