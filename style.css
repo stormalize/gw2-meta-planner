@@ -159,6 +159,10 @@ button {
 	& > ul {
 		margin-block: 1rem;
 
+		& li {
+			max-width: 65ch;
+		}
+
 		& li:not(:first-child) {
 			margin-top: 0.5rem;
 
