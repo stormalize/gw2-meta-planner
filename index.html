@@ -53,6 +53,17 @@
 						></button>
 					</div>
 					<div class="control">
+						<label for="setting-default-estimate">Default Estimate</label>
+						<select
+							x-model="settings.defaultEstimate"
+							id="setting-default-estimate"
+						>
+							<option value="min">Minimum</option>
+							<option value="avg">Average</option>
+							<option value="max">Maximum</option>
+						</select>
+					</div>
+					<div class="control">
 						<label for="manual-entry">Add Unscheduled Meta Event</label>
 						<div class="manual-entry">
 							<select
@@ -258,7 +269,7 @@
 														<li>
 															<button
 																class="icon-button"
-																@click="resetMetaEstimate(i, index, meta.avg)"
+																@click="resetMetaEstimate(i, index, meta)"
 																aria-label="reset offset and estimate to default"
 																title="Reset offset and estimate to default"
 															>

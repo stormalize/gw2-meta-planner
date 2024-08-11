@@ -11,6 +11,11 @@ Alpine.data("gw2MetaPlanner", () => ({
 			this.setupIntersectObserver();
 		});
 
+		// provide default for settings in case they are missing
+		if (!"defaultEstimate" in this.settings) {
+			this.settings.defaultEstimate = "avg";
+		}
+
 		this.metas = data.metas;
 		this.unscheduledMetaForm.time = this.getLocalTime(0);
 		let timezoneOffset = new Date().getTimezoneOffset();
@@ -93,6 +98,9 @@ Alpine.data("gw2MetaPlanner", () => ({
 		meta: 0,
 		time: "00:00",
 	},
+	settings: Alpine.$persist({
+		defaultEstimate: "avg",
+	}),
 	routes: Alpine.$persist([
 		{ name: "Main", metas: [{ id: 1, time: 1, duration: 25, offset: 0 }] },
 	]), // list of ids
@@ -153,11 +161,13 @@ Alpine.data("gw2MetaPlanner", () => ({
 		this.addToRoute(routeId, this.unscheduledMetaForm.meta, time);
 	},
 	addToRoute(routeId, metaId, time) {
+		const timeKey = this.settings?.defaultEstimate || "avg";
+
 		const metas = this.routes[routeId].metas;
 		const meta = this.findMetaById(metaId);
-		const duration = meta?.avg ? meta.avg : meta.max;
+		const duration = meta[timeKey] || meta.max;
 
-		const newLocalTime = this.getLocalTime(time, meta.max);
+		const newLocalTime = this.getLocalTime(time, duration);
 		console.log(newLocalTime);
 		if (newLocalTime) {
 			this.unscheduledMetaForm.time = newLocalTime;
@@ -170,10 +180,13 @@ Alpine.data("gw2MetaPlanner", () => ({
 
 		// console.log(this.routes);
 	},
-	resetMetaEstimate(routeId, number, avg) {
+	resetMetaEstimate(routeId, number, meta) {
+		const timeKey = this.settings?.defaultEstimate || "avg";
+		const duration = meta[timeKey] || meta.max;
+
 		const routeMeta = this.routes[routeId].metas[number];
 		if (routeMeta) {
-			routeMeta.duration = avg;
+			routeMeta.duration = duration;
 			routeMeta.offset = 0;
 		}
 	},
