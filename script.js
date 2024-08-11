@@ -94,7 +94,7 @@ Alpine.data("gw2MetaPlanner", () => ({
 		time: "00:00",
 	},
 	routes: Alpine.$persist([
-		{ name: "Main", metas: [{ id: 1, time: 1, duration: 25 }] },
+		{ name: "Main", metas: [{ id: 1, time: 1, duration: 25, offset: 0 }] },
 	]), // list of ids
 	get releases() {
 		// skip unscheduled metas, i.e. with no times listed
@@ -157,7 +157,10 @@ Alpine.data("gw2MetaPlanner", () => ({
 		const meta = this.findMetaById(metaId);
 		const duration = meta?.avg;
 
-		this.routes[routeId].metas = [...metas, { id: metaId, time, duration }];
+		this.routes[routeId].metas = [
+			...metas,
+			{ id: metaId, time, duration, offset: 0 },
+		];
 
 		// console.log(this.routes);
 	},
@@ -198,9 +201,10 @@ Alpine.data("gw2MetaPlanner", () => ({
 
 		return copies;
 	},
-	generateRowNumberFromTime(time) {
+	generateRowNumberFromTime(time, offsetMinutes) {
+		const offset = offsetMinutes ? Math.ceil(offsetMinutes / 5) : 0;
 		// time is managed in hours from reset
-		const result = time * 12 + 1;
+		const result = time * 12 + 1 + offset;
 		return Math.round(result);
 	},
 	generateRowNumberFromMinutes(duration) {

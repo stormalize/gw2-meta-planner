@@ -142,7 +142,10 @@
 																:style="{gridRowStart: generateRowNumberFromTime(meta.time), gridRowEnd: `span ${meta.max / 5}`}"
 															>
 																<p class="title" x-text="meta.name"></p>
-																<p x-text="getLocalTime(meta.time)"></p>
+																<p
+																	class="time"
+																	x-text="getLocalTime(meta.time)"
+																></p>
 																<p x-text="meta.waypoint"></p>
 																<dl class="durations">
 																	<dt>Min</dt>
@@ -205,14 +208,32 @@
 													class="meta"
 													:data-release="meta.release"
 													x-data="{meta: prepareRouteMeta(m)}"
-													:style="{gridRowStart: generateRowNumberFromTime(meta.time), gridRowEnd: `span ${generateRowNumberFromMinutes(m.duration)}`}"
+													:style="{gridRowStart: generateRowNumberFromTime(meta.time, m.offset), gridRowEnd: `span ${generateRowNumberFromMinutes(m.duration)}`}"
 												>
-													<p class="title" x-text="meta.name"></p>
-													<p x-text="getLocalTime(meta.time)"></p>
+													<p
+														class="title"
+														:class="{'material-icon-before': m.offset >= meta.max, 'warning': m.offset >= meta.max}"
+														icon-name="warning"
+														x-text="meta.name"
+														:title="m.offset >= meta.max ? `Warning: offset pushes your event out of the time limit of the event` : false"
+													></p>
+													<p
+														class="time desc material-icon-before"
+														icon-name="schedule"
+														x-text="getLocalTime(meta.time)"
+														:title="`Durations: \nMin: ${meta.min}m \nAvg: ${meta.avg}m \nMax: ${meta.max}m`"
+													></p>
 													<p x-text="meta.waypoint"></p>
 													<dl class="durations">
-														<dt>Min</dt>
-														<dd x-text="meta.min"></dd>
+														<dt class="est">Offset</dt>
+														<dd>
+															<input
+																x-model.number="m.offset"
+																step="5"
+																min="0"
+																type="number"
+															/>
+														</dd>
 														<dt class="est" title="Your Estimate">Est</dt>
 														<dd>
 															<input
@@ -220,8 +241,6 @@
 																type="number"
 															/>
 														</dd>
-														<dt>Max</dt>
-														<dd x-text="meta.max"></dd>
 													</dl>
 													<ul class="controls">
 														<li>
