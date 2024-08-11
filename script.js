@@ -160,9 +160,6 @@ Alpine.data("gw2MetaPlanner", () => ({
 		const time = this.getResetOffsetFromTime(this.unscheduledMetaForm.time);
 		this.addToRoute(routeId, this.unscheduledMetaForm.meta, time);
 	},
-	handleWaypointClick(event) {
-		window.getSelection().selectAllChildren(event.target);
-	},
 	addToRoute(routeId, metaId, time) {
 		const timeKey = this.settings?.defaultEstimate || "avg";
 
@@ -300,3 +297,8 @@ async function getDataJson(url) {
 		console.error(error.message);
 	}
 }
+
+document.addEventListener("click", (event) => {
+	if (event.target.closest("[x-text='meta.waypoint']"))
+		window.getSelection().selectAllChildren(event.target);
+});
