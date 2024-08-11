@@ -804,6 +804,17 @@
 			"max": 60
 		},
 		{
+			"id": 68,
+			"release": "End of Dragons",
+			"name": "The Jade Crisis",
+			"group": "Gyala Delve",
+			"waypoint": "[&BKoNAAA=]",
+			"times": [],
+			"min": 25,
+			"avg": 35,
+			"max": 40
+		},
+		{
 			"id": 64,
 			"release": "Secrets of the Obscure",
 			"name": "Unlocking the Wizard's Tower",
