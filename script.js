@@ -168,6 +168,7 @@ Alpine.data("gw2MetaPlanner", () => ({
 		const routeMeta = this.routes[routeId].metas[number];
 		if (routeMeta) {
 			routeMeta.duration = avg;
+			routeMeta.offset = 0;
 		}
 	},
 	removeFromRoute(routeId, number) {
