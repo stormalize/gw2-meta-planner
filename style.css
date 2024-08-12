@@ -442,6 +442,7 @@ select {
 
 	> .title {
 		position: relative;
+		z-index: 1;
 		top: 0;
 		background-color: var(--color-sys-surface);
 		align-self: end;
