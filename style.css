@@ -314,7 +314,7 @@ select {
 }
 
 .meta-grid {
-	--incr-5-min: 2rem;
+	--incr-5-min: 4rem;
 	--incr-15-min: calc((var(--incr-5-min) + 0.25rem) * 3);
 	--header-size: 4.5rem;
 	background-image: repeating-linear-gradient(
