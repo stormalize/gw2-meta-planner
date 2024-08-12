@@ -375,14 +375,27 @@
 			"max": 15
 		},
 		{
-			"id": 31,
+			"id": 69,
 			"release": "Heart of Thorns",
-			"name": "Prep + Chak Gerent",
+			"name": "Chak Prep",
 			"group": "Tangled Depths",
 			"waypoint": "[&BPUHAAA=]",
 			"times": [
 				0.417, 2.417, 4.417, 6.417, 8.417, 10.417, 12.417, 14.417, 16.417,
 				18.417, 20.417, 22.417
+			],
+			"min": 5,
+			"avg": 5,
+			"max": 5
+		},
+		{
+			"id": 31,
+			"release": "Heart of Thorns",
+			"name": "Chak Gerent",
+			"group": "Tangled Depths",
+			"waypoint": "[&BPUHAAA=]",
+			"times": [
+				0.5, 2.5, 4.5, 6.5, 8.5, 10.5, 12.5, 14.5, 16.5, 18.5, 20.5, 22.5
 			],
 			"min": 5,
 			"avg": 8,
