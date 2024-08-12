@@ -231,15 +231,34 @@ Alpine.data("gw2MetaPlanner", () => ({
 		return copies;
 	},
 	generateRowNumberFromTime(time, offsetMinutes) {
-		const offset = offsetMinutes ? Math.ceil(offsetMinutes / 5) : 0;
+		const offset = offsetMinutes ? Math.floor(offsetMinutes / 5) : 0;
 		// time is managed in hours from reset
 		const result = time * 12 + 1 + offset;
 		return Math.round(result);
 	},
-	generateRowNumberFromMinutes(duration) {
+	generateRowNumberFromMinutes(duration, roundUp = true) {
 		// duration in minutes
-		// rounded up to nearest increment of 5 minutes
-		return Math.ceil(duration / 5);
+		const rowNumber = roundUp
+			? Math.ceil(duration / 5)
+			: Math.floor(duration / 5);
+		// rounded to nearest increment of 5 minutes
+		return rowNumber >= 1 ? rowNumber : 1;
+	},
+	getMetaPositionStyles(m) {
+		const rowEnd = this.generateRowNumberFromMinutes(m.duration, false);
+		const endLeftovers = m.duration > 5 ? m.duration % 5 : 0;
+		const startLeftovers = m.offset % 5;
+		const styles = {
+			gridRowStart: this.generateRowNumberFromTime(m.time, m.offset),
+			gridRowEnd: `span ${rowEnd}`,
+			marginBlockEnd: endLeftovers
+				? `calc((var(--incr-5-min) + 0.25rem) / 5 * -${endLeftovers})`
+				: null,
+			top: startLeftovers
+				? `calc((var(--incr-5-min) + 0.25rem) / 5 * ${startLeftovers})`
+				: null,
+		};
+		return styles;
 	},
 	getResetOffsetFromTime(timestr) {
 		const [hours, minutes, ...rest] = timestr.split(":");

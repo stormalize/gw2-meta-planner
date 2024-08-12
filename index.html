@@ -241,7 +241,7 @@
 													class="meta"
 													:data-release="meta.release"
 													x-data="{meta: prepareRouteMeta(m)}"
-													:style="{gridRowStart: generateRowNumberFromTime(m.time, m.offset), gridRowEnd: `span ${generateRowNumberFromMinutes(m.duration)}`}"
+													:style="getMetaPositionStyles(m)"
 												>
 													<p
 														class="title"
@@ -266,7 +266,6 @@
 														<dd>
 															<input
 																x-model.number="m.offset"
-																step="5"
 																min="0"
 																type="number"
 															/>
@@ -275,6 +274,7 @@
 														<dd>
 															<input
 																x-model.number="m.duration"
+																min="0"
 																type="number"
 															/>
 														</dd>

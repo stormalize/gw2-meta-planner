@@ -507,6 +507,7 @@ select {
 }
 
 .meta {
+	position: relative;
 	display: grid;
 	gap: 0.125rem;
 	grid-template-rows: auto auto auto 1fr;
