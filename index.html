@@ -135,7 +135,7 @@
 										<template x-for="i in 96">
 											<li
 												x-text="getLocalTimeInMinutes((i - 1) * 15)"
-												:style="{gridRowStart: generateRowNumberFromMinutes((i - 1) * 15) + 1}"
+												:style="{gridRowStart: i === 1 ? i : generateRowNumberFromMinutes((i - 1) * 15) + 1}"
 											></li>
 										</template>
 									</ul>
