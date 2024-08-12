@@ -379,6 +379,7 @@ select {
 		align-self: end;
 
 		position: sticky;
+		z-index: 1;
 		top: 0;
 		background-color: var(--color-sys-surface);
 		height: 2rem;
@@ -484,6 +485,7 @@ select {
 		align-self: end;
 		position: sticky;
 		top: 0;
+		z-index: 1;
 		background-color: var(--color-sys-surface);
 
 		& > input {
