@@ -105,6 +105,8 @@ Alpine.data("gw2MetaPlanner", () => ({
 	routes: Alpine.$persist([
 		{ name: "Main", metas: [{ id: 1, time: 1, duration: 25, offset: 0 }] },
 	]), // list of ids
+	moveRoutes: "",
+	moveMessage: "",
 	get releases() {
 		// skip unscheduled metas, i.e. with no times listed
 		const sorted = this.metas.reduce((obj, meta) => {
@@ -150,6 +152,53 @@ Alpine.data("gw2MetaPlanner", () => ({
 	},
 	findMetaById(id) {
 		return this.metas.find((meta) => meta.id === id);
+	},
+	prepareImport() {
+		let data = false;
+		try {
+			data = JSON.parse(this.moveRoutes);
+		} catch (error) {
+			this.moveMessage = "Invalid JSON format detected";
+			return;
+		}
+
+		if (data) {
+			const preparedData = data.map((route) => {
+				return {
+					name: route?.n || "Unknown",
+					metas:
+						"m" in route
+							? route.m.map((meta) => {
+									return {
+										id: meta?.id || 0,
+										time: meta?.t || 0,
+										duration: meta?.d || 5,
+										offset: meta?.o || 0,
+									};
+							  })
+							: [],
+				};
+			});
+			this.routes = preparedData;
+			this.moveMessage = "";
+			this.moveRoutes = "";
+		}
+	},
+	prepareExport() {
+		const out = this.routes.map((route) => {
+			return {
+				n: route.name,
+				m: route.metas.map((meta) => {
+					return {
+						id: meta.id,
+						t: Math.round(meta.time * 1000) / 1000,
+						d: meta.duration,
+						o: meta.offset,
+					};
+				}),
+			};
+		});
+		this.moveRoutes = JSON.stringify(out);
 	},
 	prepareRouteMeta(routeMeta) {
 		return (

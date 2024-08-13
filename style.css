@@ -152,6 +152,12 @@ button {
 			transparent
 		);
 	}
+
+	&.button-icon {
+		display: inline-flex;
+		gap: 0.25rem;
+		align-items: center;
+	}
 }
 
 .howto {
@@ -166,7 +172,8 @@ button {
 		& li:not(:first-child) {
 			margin-top: 0.5rem;
 
-			& > ul {
+			& > ul,
+			ol {
 				margin-block: 0.5rem 1rem;
 			}
 		}
@@ -179,6 +186,23 @@ button {
 
 .warning {
 	color: var(--color-sys-state-warning);
+}
+
+.wip {
+	background-color: var(--color-sys-surface);
+	color: var(--color-sys-state-warning);
+	/* border-block-end: 2px solid var(--color-sys-state-warning); */
+	padding: 0.5rem;
+	display: flex;
+	gap: 0.5rem;
+	justify-content: center;
+
+	> div {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+		justify-content: center;
+	}
 }
 
 .layout {
@@ -209,8 +233,11 @@ input[type="number"] {
 }
 
 select {
+	width: 100%;
+	max-width: max-content;
 	min-height: calc(1.25em + 0.5rem);
 	font-size: inherit;
+	display: inline-block;
 }
 
 [x-data="gw2MetaPlanner"] {
@@ -218,20 +245,36 @@ select {
 		border-bottom: 2px solid var(--color-sys-fg);
 		padding: 0.5rem;
 		display: flex;
+		flex-flow: row wrap;
 		gap: 1rem;
 
 		& > .control {
+			background-color: var(--color-sys-surface);
+			padding: 0.5rem;
+			border-radius: 0.5rem;
 			display: flex;
 			flex-flow: column;
 			align-items: start;
 			gap: 0.5rem;
+
+			& > input {
+				min-height: calc(1.25em + 0.5rem);
+			}
 		}
 	}
+}
+
+.import-export {
+	display: flex;
+	align-items: stretch;
+	flex-flow: row wrap;
+	gap: 0.5rem;
 }
 
 .manual-entry {
 	display: flex;
 	align-items: center;
+	flex-flow: row wrap;
 
 	gap: 0.5rem;
 	& > select {
@@ -241,11 +284,17 @@ select {
 		/* width: 8ch; */
 	}
 
-	& > ul {
-		list-style: none;
-		padding: 0;
+	& > div {
 		display: flex;
-		gap: 0.25rem;
+		align-items: center;
+		gap: 0.5rem;
+
+		> ul {
+			list-style: none;
+			padding: 0;
+			display: flex;
+			gap: 0.25rem;
+		}
 	}
 }
 

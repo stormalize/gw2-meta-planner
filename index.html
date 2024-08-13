@@ -26,6 +26,10 @@
 		<script type="module" src="script.js"></script>
 	</head>
 	<body x-data="" class="loading" :class="$store.global.bodyClasses">
+		<div class="wip">
+			<span class="material-symbols-outlined">manufacturing</span>Work in
+			Progress
+		</div>
 		<h1>GW2 Meta Planner</h1>
 		<div class="howto">
 			<h2>How to Use</h2>
@@ -35,6 +39,21 @@
 					Add additional routes for backup events or compare multiple plans.
 				</li>
 				<li>Your routes and settings are saved across page loads.</li>
+				<li>
+					In addition to saving locally, basic import and exporting of routes is
+					supported, to save and share routes as plain text:
+					<ol>
+						<li>
+							<strong>Export</strong>: Hit the "Generate Export" button to
+							generate a text string of your current route data, and save it
+							somewhere like a text file.
+						</li>
+						<li>
+							<strong>Import</strong>: Paste in a generated text string and hit
+							"Import" to set up a previously saved route.
+						</li>
+					</ol>
+				</li>
 				<li>
 					Use the <em>Estimate</em> and <em>Offset</em> options for each event
 					in your route to fine-tune events that might overwise overlap.
@@ -67,8 +86,30 @@
 						<button
 							id="dark-mode-toggle"
 							@click="$store.global.toggleDarkMode()"
-							x-text="`Toggle to ${$store.global.isDarkMode ? 'Light Mode' : 'Dark Mode'}`"
+							x-text="$store.global.isDarkMode ? 'Light Mode' : 'Dark Mode'"
 						></button>
+					</div>
+					<div class="control">
+						<label for="import-export">Import/Export</label>
+						<div class="import-export">
+							<button class="button-icon" @click="prepareExport">
+								<span class="material-symbols-outlined inline">upload</span>
+								Generate Export
+							</button>
+							<input
+								autocomplete="off"
+								type="text"
+								id="import-export"
+								x-model="moveRoutes"
+							/>
+							<button class="button-icon" @click="prepareImport">
+								<span class="material-symbols-outlined inline">Download</span>
+								Import
+							</button>
+						</div>
+						<template x-if="moveMessage">
+							<p x-text="`Error - ${moveMessage}`"></p>
+						</template>
 					</div>
 					<div class="control">
 						<label for="setting-default-estimate">Default Estimate</label>
@@ -101,24 +142,26 @@
 									</optgroup>
 								</template>
 							</select>
-							<label for="manual-entry-time">Time:</label>
-							<input
-								x-model="unscheduledMetaForm.time"
-								id="manual-entry-time"
-								type="time"
-								step="300"
-							/>
-							<ul>
-								<template x-for="(route, i) in routes">
-									<li>
-										<button
-											@click="handleUnscheduledAdd(i)"
-											:title="`Add to ${route.name} route`"
-											x-text="`+ ${route.name ? route.name : `unnamed [${i}]`}`"
-										></button>
-									</li>
-								</template>
-							</ul>
+							<div>
+								<label for="manual-entry-time">Time:</label>
+								<input
+									x-model="unscheduledMetaForm.time"
+									id="manual-entry-time"
+									type="time"
+									step="300"
+								/>
+								<ul>
+									<template x-for="(route, i) in routes">
+										<li>
+											<button
+												@click="handleUnscheduledAdd(i)"
+												:title="`Add to ${route.name} route`"
+												x-text="`+ ${route.name ? route.name : `unnamed [${i}]`}`"
+											></button>
+										</li>
+									</template>
+								</ul>
+							</div>
 						</div>
 					</div>
 				</header>
