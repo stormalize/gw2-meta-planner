@@ -47,7 +47,7 @@ const watcher = new Watcher("src", {}, (event, targetPath, targetPathNext) => {
 
 		case "css":
 		case "js":
-			copyFileSync(`${__dirname}src/${file}`, `${__dirname}dist/${file}`);
+			copyFileSync(`${__dirname}src/${file}`, `${__dirname}public/${file}`);
 			break;
 
 		default:
