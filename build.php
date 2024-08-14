@@ -9,12 +9,13 @@ if ($assets) {
 	handle_assets();
 }
 
-function handle_assets() {
+function handle_assets()
+{
 	global $in_path, $out_path;
-	
+
 	foreach (['css', 'js'] as $type) {
 		$files = glob($in_path . '/*.' . $type);
-		foreach($files as $file) {
+		foreach ($files as $file) {
 			$outfile = str_replace($in_path, $out_path, $file);
 			print "COPYING $file to $outfile\n";
 			copy($file, $outfile);
@@ -22,7 +23,8 @@ function handle_assets() {
 	}
 }
 
-function build_file($file_path) {
+function build_file($file_path)
+{
 	global $data;
 
 	$output = NULL;
@@ -39,33 +41,35 @@ function build_file($file_path) {
 	return $output;
 }
 
-function clean($path) {
+function clean($path)
+{
 	echo "CLEANING HTML from $path\n";
 
 	if (! file_exists($path)) {
-			echo "CREATING output path $path\n";
-			if (! mkdir($path, 0777, true)) {
-					echo "ERROR: Couldn't create output directory $path\n";
-					die();
-			};
+		echo "CREATING output path $path\n";
+		if (! mkdir($path, 0777, true)) {
+			echo "ERROR: Couldn't create output directory $path\n";
+			die();
+		};
 	}
 
 	$html_files = glob($path . '/*.html');
-	foreach($html_files as $html_file) {
-			echo "DELETING $html_file\n";
-			unlink($html_file);
+	foreach ($html_files as $html_file) {
+		echo "DELETING $html_file\n";
+		unlink($html_file);
 	}
 }
 
-function build() {
+function build()
+{
 	global $in_path, $out_path;
 
 	clean($out_path);
 
-	$files = glob($in_path . '/*.php');
+	$files = glob($in_path . '/*.html');
 
 	foreach ($files as $file) {
-		$outfile = preg_replace('/\.php$/', '.html', str_replace($in_path, $out_path, $file));
+		$outfile = str_replace($in_path, $out_path, $file);
 		print "BUILDING $file to $outfile\n";
 		$out = build_file($file, false);
 		file_put_contents($outfile, $out);

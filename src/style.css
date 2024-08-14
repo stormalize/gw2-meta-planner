@@ -22,86 +22,82 @@ body {
 	color: var(--color-sys-fg);
 }
 
-.container {
-	display: flex;
-}
+.mp-grid {
+	--mp-grid--incr-min: 1rem;
+	--mp-grid--gap-length: 6px;
+	--mp-grid--outer-gutter: 0.25rem;
+	--mp-grid--header-shadow: 0 0.25rem 0.25rem var(--color-sys-bg);
+	--mp-grid--column-width: 12rem;
 
-.grid {
-	--mb-grid--incr-min: 1rem;
-	--mb-grid--gap-length: 6px;
-	--mb-grid--outer-gutter: 0.25rem;
-	--mb-grid--header-shadow: 0 0.25rem 0.25rem var(--color-sys-bg);
-	--mb-grid--column-width: 12rem;
-
-	--mb-grid--length-1-min: calc(
-		var(--mb-grid--gap-length) + var(--mb-grid--incr-min)
+	--mp-grid--length-1-min: calc(
+		var(--mp-grid--gap-length) + var(--mp-grid--incr-min)
 	);
-	--mb-grid--length-15-min: calc(var(--mb-grid--length-1-min) * 15);
+	--mp-grid--length-15-min: calc(var(--mp-grid--length-1-min) * 15);
 
 	display: grid;
 	background-color: var(--color-sys-bg-sub);
 
-	grid-template-columns: auto repeat(13, var(--mb-grid--column-width));
-	grid-template-rows: auto repeat(1440, var(--mb-grid--incr-min));
+	grid-template-columns: auto repeat(13, var(--mp-grid--column-width));
+	grid-template-rows: auto repeat(1440, var(--mp-grid--incr-min));
 	width: calc(100vw - 4rem);
 	margin-inline: 2rem;
 	height: calc(80vh);
 	overflow: scroll;
 	position: relative;
-	gap: var(--mb-grid--gap-length);
-	padding: var(--mb-grid--outer-gutter);
+	gap: var(--mp-grid--gap-length);
+	padding: var(--mp-grid--outer-gutter);
 
-	--mb-grid--z-layer--header-lvl-2: 6; /* corner headers */
-	/* --mb-grid--z-layer--current: 5; current time indicator line */
-	--mb-grid--z-layer--route: 4; /* event items in sticky right column */
-	--mb-grid--z-layer--time: 4; /* items in sticky left column */
-	--mb-grid--z-layer--backdrop: 3; /* backdrop for both sticky columns */
-	--mb-grid--z-layer--header-lvl-1: 2; /* top headers, areas */
-	--mb-grid--z-layer--current: 1; /* current time indicator line */
-	--mb-grid--z-layer--event: 1; /* regular event */
-	--mb-grid--z-layer--lines: 0; /* 15 minute grid lines */
+	--mp-grid--z-layer--header-lvl-2: 6; /* corner headers */
+	/* --mp-grid--z-layer--current: 5; current time indicator line */
+	--mp-grid--z-layer--route: 4; /* event items in sticky right column */
+	--mp-grid--z-layer--time: 4; /* items in sticky left column */
+	--mp-grid--z-layer--backdrop: 3; /* backdrop for both sticky columns */
+	--mp-grid--z-layer--header-lvl-1: 2; /* top headers, areas */
+	--mp-grid--z-layer--current: 1; /* current time indicator line */
+	--mp-grid--z-layer--event: 1; /* regular event */
+	--mp-grid--z-layer--lines: 0; /* 15 minute grid lines */
 
 	&::before,
 	&::after {
 		content: "";
 		display: block;
 		position: sticky;
-		margin-block: calc(var(--mb-grid--outer-gutter) * -1);
+		margin-block: calc(var(--mp-grid--outer-gutter) * -1);
 		grid-row: 1 / -1;
-		z-index: var(--mb-grid--z-layer--backdrop);
+		z-index: var(--mp-grid--z-layer--backdrop);
 		background-color: color-mix(in oklab, var(--color-sys-bg) 50%, transparent);
 		backdrop-filter: blur(2px);
 	}
 
 	&::before {
-		left: calc(var(--mb-grid--outer-gutter) * -1);
+		left: calc(var(--mp-grid--outer-gutter) * -1);
 		grid-column: 1;
 	}
 
 	&::after {
-		right: calc(var(--mb-grid--outer-gutter) * -1);
-		/* margin-inline-start: calc(var(--mb-grid--outer-gutter) * -1); */
+		right: calc(var(--mp-grid--outer-gutter) * -1);
+		/* margin-inline-start: calc(var(--mp-grid--outer-gutter) * -1); */
 		grid-column: -2;
 	}
 
 	&.scroll-start {
 		&::before {
-			margin-inline-end: calc(var(--mb-grid--outer-gutter) * -2);
+			margin-inline-end: calc(var(--mp-grid--outer-gutter) * -2);
 		}
 	}
 
 	&.scroll-end {
 		&::after {
-			margin-inline-start: calc(var(--mb-grid--outer-gutter) * -1);
+			margin-inline-start: calc(var(--mp-grid--outer-gutter) * -1);
 		}
 	}
 
-	& > .lines {
+	& > .mp-lines {
 		--grid-line-color: var(--color-sys-surface-1);
 
 		pointer-events: none;
 		position: relative;
-		z-index: var(--mb-grid--z-layer--lines);
+		z-index: var(--mp-grid--z-layer--lines);
 		grid-row: 1 / -1;
 		grid-column: 1 / -1;
 		background-image: repeating-linear-gradient(
@@ -112,15 +108,15 @@ body {
 			transparent
 		);
 		background-repeat: repeat;
-		background-size: var(--mb-grid--length-15-min) var(--mb-grid--length-15-min);
+		background-size: var(--mp-grid--length-15-min) var(--mp-grid--length-15-min);
 		background-position: top
 			calc(
-				var(--mp-grid-header-height, 1rem) + var(--mb-grid--gap-length) - 1px
+				var(--mp-grid-header-height, 1rem) + var(--mp-grid--gap-length) - 1px
 			)
 			center;
 	}
 
-	& > .current {
+	& > .mp-current {
 		--grid-line-color: var(--color-sys-surface-1);
 		display: grid;
 		grid-template-columns: subgrid;
@@ -128,17 +124,17 @@ body {
 
 		pointer-events: none;
 		position: relative;
-		z-index: var(--mb-grid--z-layer--current);
+		z-index: var(--mp-grid--z-layer--current);
 		grid-row: calc(clamp(0, var(--time), 1440) + 2);
 		grid-column: 1 / -1;
 		border-top: 2px solid var(--color-sys-accent-1-intense);
 		opacity: 0.7;
 		filter: drop-shadow(0 0 0.25rem var(--color-sys-accent-1-intense));
 
-		& > .clock {
+		& > .mp-clock {
 			grid-column: -3;
 			position: sticky;
-			right: calc(var(--mb-grid--column-width) + var(--mb-grid--gap-length));
+			right: calc(var(--mp-grid--column-width) + var(--mp-grid--gap-length));
 			margin-inline-start: 0.25rem;
 			background-color: var(--color-sys-accent-1-intense);
 			color: var(--color-sys-bg);
@@ -151,57 +147,57 @@ body {
 		}
 	}
 
-	& > :where(.event, .header, .time) {
+	& > :where(.mp-event, .mp-header, .mp-time) {
 		padding: 0.25rem;
 		border-radius: 0.25rem;
 	}
 }
 
-.header {
+.mp-header {
 	grid-row: 1;
 	position: sticky;
 	top: 0;
-	z-index: var(--mb-grid--z-layer--header-lvl-1);
-	box-shadow: var(--mb-grid--header-shadow);
+	z-index: var(--mp-grid--z-layer--header-lvl-1);
+	box-shadow: var(--mp-grid--header-shadow);
 	background-color: var(--color-sys-surface-1);
-	&.route {
-		z-index: var(--mb-grid--z-layer--header-lvl-2);
+	&.mp-route {
+		z-index: var(--mp-grid--z-layer--header-lvl-2);
 	}
 	align-content: end;
 
-	&.time {
+	&.mp-time {
 		grid-row-start: 1;
-		z-index: var(--mb-grid--z-layer--header-lvl-2);
+		z-index: var(--mp-grid--z-layer--header-lvl-2);
 	}
 }
 
-.time {
+.mp-time {
 	grid-column: 1;
 	position: sticky;
 	left: 0;
-	box-shadow: var(--mb-grid--header-shadow);
+	box-shadow: var(--mp-grid--header-shadow);
 	background-color: var(--color-sys-surface-1);
-	z-index: var(--mb-grid--z-layer--time);
+	z-index: var(--mp-grid--z-layer--time);
 
-	&:not(.header) {
+	&:not(.mp-header) {
 		grid-row-end: span 15;
 	}
 }
 
-.event,
-.time {
+.mp-event,
+.mp-time {
 	/* plan for 15 minutes of space BEFORE reset */
 	grid-row-start: calc(clamp(0, (var(--time, 0) + var(--offset, 0)), 1440) + 2);
 }
 
-.event {
+.mp-event {
 	position: relative;
-	z-index: var(--mb-grid--z-layer--event);
+	z-index: var(--mp-grid--z-layer--event);
 	grid-row-end: span 5;
 	border: 2px solid color-mix(in oklab, var(--color-sys-fg) 15%, transparent);
 	background-color: var(--color-sys-surface-2);
 
-	&:not(.route) {
+	&:not(.mp-route) {
 		&:not(:hover) {
 			background-color: color-mix(
 				in oklab,
@@ -212,8 +208,8 @@ body {
 	}
 }
 
-.route {
-	z-index: var(--mb-grid--z-layer--route);
+.mp-route {
+	z-index: var(--mp-grid--z-layer--route);
 	grid-column: -2;
 	position: sticky;
 	right: 0;

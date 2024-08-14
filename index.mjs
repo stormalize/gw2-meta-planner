@@ -14,7 +14,7 @@ const watcher = new Watcher("src", {}, (event, targetPath, targetPathNext) => {
 		file && file.includes(".") ? file.replace(/\.[^/.]+$/, "") : file;
 
 	switch (type) {
-		case "php":
+		case "html":
 		case "json":
 			if ("add" === event) {
 				if (initBuildComplete) {
@@ -25,18 +25,17 @@ const watcher = new Watcher("src", {}, (event, targetPath, targetPathNext) => {
 				}
 			}
 
-			if ("json")
-				exec("php build.php", (error, stdout, stderr) => {
-					if (error) {
-						console.log(`error: ${error.message}`);
-						return;
-					}
-					if (stderr) {
-						console.log(stderr);
-						return;
-					}
-					console.log(stdout);
-				});
+			exec("php build.php", (error, stdout, stderr) => {
+				if (error) {
+					console.log(`error: ${error.message}`);
+					return;
+				}
+				if (stderr) {
+					console.log(stderr);
+					return;
+				}
+				console.log(stdout);
+			});
 			break;
 
 		case "css":
