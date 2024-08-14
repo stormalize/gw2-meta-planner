@@ -16,12 +16,6 @@ const watcher = new Watcher("src", {}, (event, targetPath, targetPathNext) => {
 	switch (type) {
 		case "php":
 		case "json":
-			// const data = JSON.parse(readFileSync("src/data.json"));
-			// const res = eta.render(name, {
-			// 	...data,
-			// 	clockIncrements: [...Array(96).keys()],
-			// });
-			// writeFileSync(`${__dirname}dist/${name}.html`, res);
 			if ("add" === event) {
 				if (initBuildComplete) {
 					// skip the rest, no need to build multiple times on init

@@ -1,3 +1,27 @@
+<?php
+function get_min_from_reset_offset( $offset ) {
+	return $offset * 60;
+}
+
+function get_time_from_reset_offset( $offset ) {
+	$total = get_min_from_reset_offset( $offset);
+	$minutes = str_pad($total % 60, 2, "0", STR_PAD_LEFT);
+	$hours = str_pad(floor($total / 60), 2, "0", STR_PAD_LEFT);
+	return "{$hours}:{$minutes}";
+}
+
+$clock_increments = array_map(
+	function($i) {
+		$offset = $i ? $i / 4 : $i;
+		return array(
+			'minutes' => get_min_from_reset_offset( $offset ),
+			'time' => get_time_from_reset_offset( $offset )
+		);
+		return $minutes;
+	},
+	array_keys(array_fill(0, 96, ''))
+);
+?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -11,6 +35,11 @@
 	</head>
 	<body>
 		<h1><?php echo $data['metas'][0]['name']; ?> Meta Planner</h1>
+		<ul>
+			<?php foreach ($clock_increments as $v) { ?>
+				<li style="--time: <?php echo $v['minutes']; ?>"><?php echo $v['time']; ?><li>
+			<?php } ?>
+		</ul>
 		<div class="grid">
 			<div class="header time">Time</div>
 			<p class="header" data-intersect="start" style="grid-column-start: 2">
