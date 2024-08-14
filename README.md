@@ -1,9 +1,23 @@
 # GW2 Meta Planner
 
-Rough prototype built with alpine.js.
+## Development
 
-There are some unscheduled metas available in the list (like private convergences, for example) that may be started on demand, but others that cannot be (like Sandswept Isles) are currently intentionally left out.
+Minimal file watching for CSS, JS, PHP/HTML, and JSON inside the `src` directory:
 
-- Built around a CSS grid that represents a full daily reset cycle, with rows for 5 minute increments
-- Data is managed in `data.json`, described by `schema.json`
-- alpine.js used for "state management" and live updates (and localstorage)
+```sh
+npm i
+npm start
+```
+
+For live browser refresh, can use the Live Server extension in VS Code.
+
+### Build
+
+In addition to processing content, this command will also copy CSS/JS assets to the `public` directory
+
+```sh
+npm run build
+
+# or
+php build.php --assets
+```

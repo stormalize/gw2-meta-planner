@@ -1,11 +1,11 @@
 import Watcher from "watcher";
 import { copyFileSync, writeFileSync, readFileSync } from "node:fs";
 import * as url from "node:url";
-import { Eta } from "eta";
+import { exec } from "node:child_process";
 
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
-const eta = new Eta({ views: `${__dirname}src` });
+let initBuildComplete = false;
 
 const watcher = new Watcher("src", {}, (event, targetPath, targetPathNext) => {
 	const file = targetPath.split("/").slice(-1)[0];
@@ -14,10 +14,35 @@ const watcher = new Watcher("src", {}, (event, targetPath, targetPathNext) => {
 		file && file.includes(".") ? file.replace(/\.[^/.]+$/, "") : file;
 
 	switch (type) {
-		case "eta":
-			const data = JSON.parse(readFileSync("src/data.json"));
-			const res = eta.render(name, data);
-			writeFileSync(`${__dirname}dist/${name}.html`, res);
+		case "php":
+		case "json":
+			// const data = JSON.parse(readFileSync("src/data.json"));
+			// const res = eta.render(name, {
+			// 	...data,
+			// 	clockIncrements: [...Array(96).keys()],
+			// });
+			// writeFileSync(`${__dirname}dist/${name}.html`, res);
+			if ("add" === event) {
+				if (initBuildComplete) {
+					// skip the rest, no need to build multiple times on init
+					return;
+				} else {
+					initBuildComplete = true;
+				}
+			}
+
+			if ("json")
+				exec("php build.php", (error, stdout, stderr) => {
+					if (error) {
+						console.log(`error: ${error.message}`);
+						return;
+					}
+					if (stderr) {
+						console.log(stderr);
+						return;
+					}
+					console.log(stdout);
+				});
 			break;
 
 		case "css":
@@ -25,7 +50,6 @@ const watcher = new Watcher("src", {}, (event, targetPath, targetPathNext) => {
 			copyFileSync(`${__dirname}src/${file}`, `${__dirname}dist/${file}`);
 			break;
 
-		case "json":
 		default:
 			break;
 	}

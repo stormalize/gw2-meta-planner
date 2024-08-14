@@ -3,6 +3,7 @@
 	"version": "2.0.0-dev.1",
 	"description": "List of metas in Guild Wars 2, with ability to put together a custom meta train",
 	"scripts": {
+		"build": "php build.php ",
 		"start": "node index.mjs",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
@@ -16,7 +17,6 @@
 	},
 	"homepage": "https://github.com/stormalize/gw2-meta-planner#readme",
 	"devDependencies": {
-		"eta": "^3.5.0",
 		"watcher": "^2.3.1"
 	}
 }

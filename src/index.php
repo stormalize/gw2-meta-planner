@@ -10,12 +10,9 @@
 		<title>GW2 Meta Planner</title>
 	</head>
 	<body>
-		<h1>GW2 Meta Planner</h1>
+		<h1><?php echo $data['metas'][0]['name']; ?> Meta Planner</h1>
 		<div class="grid">
 			<div class="header time">Time</div>
-			<% it.clockIncrements.forEach(function(i) { %>
-			<p class="time" style="--time: <%= i * 15 %>"><%= String(Math.floor(i / 4)).padStart(2, '0') %>:<%= (i % 4) * 15 || '00' %></p>
-			<% }) %>
 			<p class="header" data-intersect="start" style="grid-column-start: 2">
 				A Lorem ipsum dolor Lorem ipsum dolor
 			</p>
