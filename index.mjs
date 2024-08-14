@@ -14,7 +14,7 @@ const watcher = new Watcher("src", {}, (event, targetPath, targetPathNext) => {
 		file && file.includes(".") ? file.replace(/\.[^/.]+$/, "") : file;
 
 	switch (type) {
-		case "html":
+		case "php":
 		case "json":
 			if ("add" === event) {
 				if (initBuildComplete) {

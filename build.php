@@ -66,10 +66,10 @@ function build()
 
 	clean($out_path);
 
-	$files = glob($in_path . '/*.html');
+	$files = glob($in_path . '/*.php');
 
 	foreach ($files as $file) {
-		$outfile = str_replace($in_path, $out_path, $file);
+		$outfile = preg_replace('/\.php$/', '.html', str_replace($in_path, $out_path, $file));
 		print "BUILDING $file to $outfile\n";
 		$out = build_file($file, false);
 		file_put_contents($outfile, $out);
@@ -77,9 +77,22 @@ function build()
 }
 
 $event_data = json_decode(file_get_contents($in_path . '/data.json'), true);
+
+$release_events = array();
+$release_events_unscheduled = array();
+
+foreach ($event_data['metas'] as $meta) {
+	if ($meta['times']) {
+		$release_events[$meta['release']][$meta['group']][] = $meta;
+	} else {
+		$release_events_unscheduled[$meta['release']][$meta['group']][] = $meta;
+	}
+}
+
 $data = array(
 	'name' => 'THE YEAR OF GW2',
-	'metas' => $event_data['metas'],
+	'metas' => $release_events,
+	'metas_unscheduled' => $release_events_unscheduled,
 );
 
 build();
