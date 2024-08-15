@@ -1,385 +1,191 @@
-import Alpine from "alpinejs";
-import persist from "alpinejs-persist";
+// selectors
+const EVENT = "mp-event";
+const ROUTE = "mp-route";
+const LINES = "mp-lines";
 
-Alpine.plugin(persist);
+// main grid
+const MAIN_GRID = document.querySelector(".mp-grid");
 
-const data = await getDataJson("./data.json");
+function startScrollIntersectObserver() {
+	if ("IntersectionObserver" in window) {
+		const intersectHandler = (changes, observer) => {
+			changes.forEach((change) => {
+				if (change.target.matches("[data-intersect='start']")) {
+					if (!change.isIntersecting || change.intersectionRatio < 1) {
+						MAIN_GRID.classList.add("scroll-start");
+					} else {
+						MAIN_GRID.classList.remove("scroll-start");
+					}
+				}
 
-Alpine.data("gw2MetaPlanner", () => ({
-	init() {
-		this.$nextTick(() => {
-			this.setupIntersectObserver();
-			Alpine.store("global").toggleLoading();
-		});
+				if (change.target.matches("[data-intersect='end']")) {
+					if (!change.isIntersecting || change.intersectionRatio < 1) {
+						MAIN_GRID.classList.add("scroll-end");
+					} else {
+						MAIN_GRID.classList.remove("scroll-end");
+					}
+				}
+			});
+		};
 
-		// provide default for settings in case they are missing
-		if (!"defaultEstimate" in this.settings) {
-			this.settings.defaultEstimate = "avg";
-		}
-
-		this.metas = data.metas;
-		this.unscheduledMetaForm.time = this.getLocalTime(0);
-		let timezoneOffset = new Date().getTimezoneOffset();
-		timezoneOffset = ((timezoneOffset > 0 ? -1 : 1) * timezoneOffset) / 60;
-		this.timezoneOffsetForReset = timezoneOffset;
-	},
-	setupIntersectObserver() {
-		const container = this.$refs.metasSection;
-
-		const options = {
-			root: container,
+		let observer = new IntersectionObserver(intersectHandler, {
+			root: MAIN_GRID,
 			rootMargin: "0px",
 			threshold: [0, 0.25, 0.5, 0.75, 1],
-		};
-
-		if ("IntersectionObserver" in window) {
-			let observer = new IntersectionObserver((changes, observer) => {
-				this.metasScrollHandler(changes, observer);
-			}, options);
-
-			const firstItem = container.querySelector(
-				".release:first-of-type > ul > .group:first-of-type"
-			);
-			const lastItem = container.querySelector(
-				".release:last-of-type > ul > .group:last-of-type"
-			);
-
-			observer.observe(firstItem);
-			observer.observe(lastItem);
-
-			this.scrollObserver = observer;
-
-			document.addEventListener("scroll", (event) => {
-				this.groupTitleScrollHandler(event);
-			});
-		}
-	},
-	metasScrollHandler(changes, observer) {
-		const container = this.$refs.metasSection;
-
-		changes.forEach((change) => {
-			if (change.target.closest(".release:first-of-type")) {
-				if (!change.isIntersecting || change.intersectionRatio < 0.75) {
-					container.classList.add("scroll-start");
-				} else {
-					container.classList.remove("scroll-start");
-				}
-			}
-
-			if (change.target.closest(".release:last-of-type")) {
-				if (!change.isIntersecting || change.intersectionRatio < 0.75) {
-					container.classList.add("scroll-end");
-				} else {
-					container.classList.remove("scroll-end");
-				}
-			}
-		});
-	},
-	groupTitleScrollHandler(event) {
-		const groups = document.querySelectorAll(".group");
-
-		Array.from(groups).forEach((el) => {
-			const title = el.querySelector(":scope > .title");
-			const position = el.getBoundingClientRect();
-			if (position.y <= 0) {
-				title.classList.add("scroll-stuck");
-				title.style.top = position.y === 0 ? 0 : `${position.y * -1}px`;
-			} else {
-				title.classList.remove("scroll-stuck");
-				title.style.top = "0";
-			}
-		});
-	},
-	test: "hey",
-	toggleDarkMode() {
-		this.isDarkMode = !this.isDarkMode;
-	},
-	timezoneOffsetForReset: 0,
-	unscheduledMetaForm: {
-		meta: 0,
-		time: "00:00",
-	},
-	settings: Alpine.$persist({
-		defaultEstimate: "avg",
-	}),
-	routes: Alpine.$persist([
-		{ name: "Main", metas: [{ id: 1, time: 1, duration: 25, offset: 0 }] },
-	]), // list of ids
-	moveRoutes: "",
-	moveMessage: "",
-	get releases() {
-		// skip unscheduled metas, i.e. with no times listed
-		const sorted = this.metas.reduce((obj, meta) => {
-			if (meta?.times.length === 0) {
-				return obj;
-			}
-			if (meta.release in obj) {
-				if (meta.group in obj[meta.release]) {
-					obj[meta.release][meta.group] = [
-						...obj[meta.release][meta.group],
-						...this.generateMetaCopiesFromTimes(meta),
-					];
-				} else {
-					obj[meta.release] = {
-						...obj[meta.release],
-						[`${meta.group}`]: this.generateMetaCopiesFromTimes(meta),
-					};
-				}
-			} else {
-				obj[meta.release] = {
-					[`${meta.group}`]: this.generateMetaCopiesFromTimes(meta),
-				};
-			}
-			return obj;
-		}, {});
-		// console.log(sorted);
-		return sorted;
-	},
-	get unscheduledMetas() {
-		const sorted = this.metas.reduce((obj, meta) => {
-			// only include metas with no scheduled times
-			if (meta?.times.length === 0) {
-				if (meta.release in obj) {
-					obj[meta.release] = [...obj[meta.release], meta];
-				} else {
-					obj[meta.release] = [meta];
-				}
-			}
-			return obj;
-		}, {});
-		// console.log(sorted);
-		return sorted;
-	},
-	findMetaById(id) {
-		return this.metas.find((meta) => meta.id === id);
-	},
-	prepareImport() {
-		let data = false;
-		try {
-			data = JSON.parse(this.moveRoutes);
-		} catch (error) {
-			this.moveMessage = "Invalid JSON format detected";
-			return;
-		}
-
-		if (data) {
-			const preparedData = data.map((route) => {
-				return {
-					name: route?.n || "Unknown",
-					metas:
-						"m" in route
-							? route.m.map((meta) => {
-									return {
-										id: meta?.id || 0,
-										time: meta?.t || 0,
-										duration: meta?.d || 5,
-										offset: meta?.o || 0,
-									};
-							  })
-							: [],
-				};
-			});
-			this.routes = preparedData;
-			this.moveMessage = "";
-			this.moveRoutes = "";
-		}
-	},
-	prepareExport() {
-		const out = this.routes.map((route) => {
-			return {
-				n: route.name,
-				m: route.metas.map((meta) => {
-					return {
-						id: meta.id,
-						t: Math.round(meta.time * 1000) / 1000,
-						d: meta.duration,
-						o: meta.offset,
-					};
-				}),
-			};
-		});
-		this.moveRoutes = JSON.stringify(out);
-	},
-	prepareRouteMeta(routeMeta) {
-		return (
-			(typeof routeMeta.id === "number" && this.findMetaById(routeMeta.id)) || {
-				id: false,
-				release: "Unknown",
-				name: "Unknown",
-				group: "Unknown",
-				waypoint: "???",
-				times: [],
-				min: 0,
-				avg: 0,
-				max: 0,
-			}
-		);
-	},
-	handleUnscheduledAdd(routeId) {
-		const time = this.getResetOffsetFromTime(this.unscheduledMetaForm.time);
-		this.addToRoute(routeId, this.unscheduledMetaForm.meta, time);
-	},
-	addToRoute(routeId, metaId, time) {
-		const timeKey = this.settings?.defaultEstimate || "avg";
-
-		const metas = this.routes[routeId].metas;
-		const meta = this.findMetaById(metaId);
-		const duration = meta[timeKey] || meta.max;
-
-		const newLocalTime = this.getLocalTime(time, duration);
-		if (newLocalTime) {
-			this.unscheduledMetaForm.time = newLocalTime;
-		}
-
-		this.routes[routeId].metas = [
-			...metas,
-			{ id: metaId, time, duration, offset: 0 },
-		];
-
-		// console.log(this.routes);
-	},
-	resetMetaEstimate(routeId, number, meta) {
-		const timeKey = this.settings?.defaultEstimate || "avg";
-		const duration = meta[timeKey] || meta.max;
-
-		const routeMeta = this.routes[routeId].metas[number];
-		if (routeMeta) {
-			routeMeta.duration = duration;
-			routeMeta.offset = 0;
-		}
-	},
-	removeFromRoute(routeId, number) {
-		const route = this.routes[routeId];
-		const newMetas = route.metas.filter((meta, i) => i !== number);
-		route.metas = newMetas;
-	},
-	createRoute() {
-		this.routes = [...this.routes, { name: "Name", metas: [] }];
-	},
-	removeRoute(routeId) {
-		const newRoutes = this.routes.filter((route, i) => i !== routeId);
-		this.routes = newRoutes;
-	},
-	isMetaInRoute(routeId, metaId, time) {
-		const route = this.routes[routeId];
-		return route
-			? -1 !==
-					route.metas.findIndex(
-						(meta) => meta.id === metaId && meta.time === time
-					)
-			: false;
-	},
-	generateMetaCopiesFromTimes(meta) {
-		let copies = [];
-		meta.times.forEach((time) => {
-			const copy = structuredClone(Alpine.raw(meta));
-			copy.time = time;
-			copies = [...copies, copy];
 		});
 
-		return copies;
-	},
-	generateRowNumberFromTime(time, offsetMinutes) {
-		const offset = offsetMinutes ? Math.floor(offsetMinutes / 5) : 0;
-		// time is managed in hours from reset
-		const result = time * 12 + 1 + offset;
-		return Math.round(result);
-	},
-	generateRowNumberFromMinutes(duration, roundUp = true) {
-		// duration in minutes
-		const rowNumber = roundUp
-			? Math.ceil(duration / 5)
-			: Math.floor(duration / 5);
-		// rounded to nearest increment of 5 minutes
-		return rowNumber >= 1 ? rowNumber : 1;
-	},
-	getMetaPositionStyles(m) {
-		const rowEnd = this.generateRowNumberFromMinutes(m.duration, false);
-		const endLeftovers = m.duration > 5 ? m.duration % 5 : 0;
-		const startLeftovers = m.offset % 5;
-		const styles = {
-			gridRowStart: this.generateRowNumberFromTime(m.time, m.offset),
-			gridRowEnd: `span ${rowEnd}`,
-			marginBlockEnd: endLeftovers
-				? `calc((var(--incr-5-min) + 0.25rem) / 5 * -${endLeftovers})`
-				: null,
-			top: startLeftovers
-				? `calc((var(--incr-5-min) + 0.25rem) / 5 * ${startLeftovers})`
-				: null,
-		};
-		return styles;
-	},
-	getResetOffsetFromTime(timestr) {
-		const [hours, minutes, ...rest] = timestr.split(":");
-		//round minutes to multiples of 5 and then divide by 60 to get hour fraction
-		const hoursInt = Number(hours);
-		const minutesInt = Number(minutes);
-		const adjustedHours =
-			this.timezoneOffsetForReset < 0
-				? hoursInt - this.timezoneOffsetForReset
-				: hoursInt + this.timezoneOffsetForReset;
-		const total =
-			(adjustedHours >= 24 ? adjustedHours - 24 : adjustedHours) +
-			(Math.ceil(minutesInt / 5) * 5) / 60;
-		return total;
-	},
-	getLocalTimeInMinutes(minutes) {
-		return this.getLocalTime(minutes / 60);
-	},
-	getLocalTime(resetOffset, extraMin = false) {
-		const extraMinutes = extraMin ? extraMin % 60 : 0;
-		const extraHours = extraMin ? Math.floor(extraMin / 60) : 0;
+		const firstItem = MAIN_GRID.querySelector("[data-intersect='start']");
+		const lastItem = MAIN_GRID.querySelector("[data-intersect='end']");
 
-		const minutes = Math.round((resetOffset % 1) * 60) + extraMinutes;
-		const hours = Math.floor(resetOffset) + extraHours;
-
-		const date = new Date();
-		date.setUTCHours(hours, minutes, 0, 0);
-		return `${String(date.getHours()).padStart(2, "0")}:${String(
-			date.getMinutes()
-		).padStart(2, "0")}`;
-	},
-	scrollObserver: null,
-	metas: [],
-}));
-
-Alpine.store("global", {
-	init() {
-		this.isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-	},
-	toggleDarkMode() {
-		this.isDarkMode = !this.isDarkMode;
-	},
-	toggleLoading() {
-		this.isLoading = !this.isLoading;
-	},
-	isDarkMode: false,
-	isLoading: true,
-	get bodyClasses() {
-		return {
-			"dark-mode": this.isDarkMode,
-			loading: this.isLoading,
-		};
-	},
-});
-
-Alpine.start();
-
-async function getDataJson(url) {
-	try {
-		const response = await fetch(url);
-		if (!response.ok) {
-			throw new Error(`Response status: ${response.status}`);
-		}
-
-		const json = await response.json();
-		return json;
-	} catch (error) {
-		console.error(error.message);
+		observer.observe(firstItem);
+		observer.observe(lastItem);
 	}
 }
 
-document.addEventListener("click", (event) => {
-	if (event.target.closest("[x-text='meta.waypoint']"))
-		window.getSelection().selectAllChildren(event.target);
-});
+function handleRouteTimeControls(event) {
+	if (!["offset", "duration"].includes(event.target.dataset.control)) {
+		return;
+	}
+
+	const routeEventItem = event.target.closest(".mp-route.mp-event");
+	if (routeEventItem) {
+		if (event.target.dataset.control === "offset") {
+			if (event.target.value) {
+				routeEventItem.style.setProperty("--offset", event.target.value);
+				// add `warn` class if offset > data-max, update title with message
+			} else {
+				routeEventItem.style.removeProperty("--offset");
+			}
+		} else if (event.target.dataset.control === "duration") {
+			if (event.target.value) {
+				routeEventItem.style.setProperty("--duration", event.target.value);
+				// add `warn` class if offset > data-max, update title with message
+			} else {
+				routeEventItem.style.removeProperty("--duration");
+			}
+		}
+	}
+}
+
+function addEventItemToRoute(metaEventItem) {
+	const newItem = metaEventItem.cloneNode(true);
+	const id = `route-${newItem.id}`;
+	const defaultDuration = Number(newItem.dataset.avg) || 0;
+
+	newItem.id = id;
+	newItem.classList.add(ROUTE.replace(".", ""));
+	newItem.style.gridColumnStart = null;
+	newItem.style.setProperty("--duration", defaultDuration);
+
+	// replace times content
+	const timesContainer = newItem.querySelector(`.${EVENT}__times`);
+	if (timesContainer) {
+		const template = document.getElementById("route-time-controls");
+		const controls = template?.content.cloneNode(true);
+		if (controls) {
+			["offset", "duration"].forEach((type) => {
+				const label = controls.querySelector(`[for="route-event-${type}"]`);
+				const input = controls.getElementById(`route-event-${type}`);
+
+				label.htmlFor = `${id}-${type}`;
+				input.id = `${id}-${type}`;
+
+				if ("duration" === type) {
+					input.value = defaultDuration;
+				}
+			});
+			timesContainer.replaceChildren(controls);
+		}
+	}
+
+	// replace actions
+	const actionsContainer = newItem.querySelector(`.${EVENT}__actions`);
+	if (actionsContainer) {
+		const template = document.getElementById("route-actions");
+		const newActionsList = template?.content.cloneNode(true);
+		if (newActionsList) {
+			actionsContainer.replaceWith(newActionsList);
+		}
+	}
+
+	const time1 = Number(newItem.dataset.start);
+	const routeItems = document.querySelectorAll(`.${ROUTE}[data-start]`);
+	const notInserted = Array.from(routeItems).every((element) => {
+		const time2 = Number(element.dataset.start);
+		if (time2 > time1) {
+			element.before(newItem);
+			return false;
+		} else if (time2 === time1) {
+			element.after(newItem);
+			return false;
+		}
+		return true;
+	});
+
+	if (notInserted) {
+		// insert at end
+		const lines = document.querySelector(`.${LINES}`);
+		lines?.before(newItem);
+	}
+
+	metaEventItem.classList.add(`${EVENT}--added`);
+}
+
+function handleAddEventItemToRoute(event) {
+	if ("addtoroute" !== event.target.dataset.control) {
+		return;
+	}
+
+	const metaEventItem = event.target.closest(`.${EVENT}`);
+	if (metaEventItem) {
+		addEventItemToRoute(metaEventItem);
+	}
+}
+
+function removeEventItemFromRoute(routeItem) {
+	const eventId = routeItem?.id?.replace("route-", "");
+	if (eventId) {
+		const metaEventItem = document.getElementById(eventId);
+		metaEventItem?.classList.remove(`${EVENT}--added`);
+	}
+	routeItem.remove();
+}
+
+function handleRemoveEventItemFromRoute(event) {
+	if ("removefromroute" !== event.target.dataset.control) {
+		return;
+	}
+
+	const routeItem = event.target.closest(`.${ROUTE}`);
+
+	if (routeItem) {
+		removeEventItemFromRoute(routeItem);
+	}
+}
+
+function registerEventListeners() {
+	// route items: time controls
+	document.addEventListener("change", handleRouteTimeControls);
+	document.addEventListener("click", handleAddEventItemToRoute);
+	document.addEventListener("click", handleRemoveEventItemFromRoute);
+}
+
+function setup() {
+	// check header height once, in case any groups have a long title
+	const header = document.querySelector(".mp-header");
+	const height = header.getBoundingClientRect().height;
+	MAIN_GRID.style.setProperty("--mp-grid--header-height", `${height}px`);
+
+	registerEventListeners();
+	startScrollIntersectObserver();
+}
+
+// on load
+// update times: look for [data-start] -- if .time update innertext, if .event update .event-time innertext
+
+// event listeners:
+// settings/controls
+// events: offset, duration, waypoint copy, add to route, delete from route
+// add warn if end time (offset + duration) is past (greater than) data-max
+
+setup();

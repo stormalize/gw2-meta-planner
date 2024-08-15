@@ -83,16 +83,16 @@ $release_events_unscheduled = array();
 
 foreach ($event_data['metas'] as $meta) {
 	if ($meta['times']) {
-		$release_events[$meta['release']][$meta['group']][] = $meta;
+		$release_events[$meta['group']][] = $meta;
 	} else {
-		$release_events_unscheduled[$meta['release']][$meta['group']][] = $meta;
+		$release_events_unscheduled[$meta['group']][] = $meta;
 	}
 }
 
 $data = array(
 	'name' => 'THE YEAR OF GW2',
-	'metas' => $release_events,
-	'metas_unscheduled' => $release_events_unscheduled,
+	'groups' => $release_events,
+	'groups_unscheduled' => $release_events_unscheduled,
 );
 
 build();

@@ -10,23 +10,32 @@ html {
 }
 
 body {
-	--color-sys-bg: #1a1a1b;
-	--color-sys-bg-sub: #0d0d0e;
-	--color-sys-surface-1: #2e2e31;
-	--color-sys-surface-2: #3d3d42;
-	--color-sys-fg: #dddde4;
-	--color-sys-accent-1-muted: #534518;
-	--color-sys-accent-1-intense: #d3aa26;
+	--mp-color-sys--bg: #1a1a1b;
+	--mp-color-sys--bg-sub: #0d0d0e;
+	--mp-color-sys--surface-1: #2e2e31;
+	--mp-color-sys--surface-2: #3d3d42;
+	--mp-color-sys--fg: #dddde4;
+	--mp-color-sys--accent-1-muted: #534518;
+	--mp-color-sys--accent-1-intense: #d3aa26;
 
-	background: var(--color-sys-bg);
-	color: var(--color-sys-fg);
+	--mp-color-ref--release-core: #cc4141;
+	--mp-color-ref--release-hot: #49a849;
+	--mp-color-ref--release-pof: #b4347f;
+	--mp-color-ref--release-ibs: #3da0e2;
+	--mp-color-ref--release-eod: #3fbeb8;
+	--mp-color-ref--release-soto: #b8a641;
+
+	background: var(--mp-color-sys--bg);
+	color: var(--mp-color-sys--fg);
+	font-family: system-ui, sans-serif;
 }
 
 .mp-grid {
 	--mp-grid--incr-min: 1rem;
+	--mp-grid--route-col-count: 1;
 	--mp-grid--gap-length: 6px;
 	--mp-grid--outer-gutter: 0.25rem;
-	--mp-grid--header-shadow: 0 0.25rem 0.25rem var(--color-sys-bg);
+	--mp-grid--header-shadow: 0 0.25rem 0.25rem var(--mp-color-sys--bg);
 	--mp-grid--column-width: 12rem;
 
 	--mp-grid--length-1-min: calc(
@@ -35,9 +44,14 @@ body {
 	--mp-grid--length-15-min: calc(var(--mp-grid--length-1-min) * 15);
 
 	display: grid;
-	background-color: var(--color-sys-bg-sub);
+	background-color: var(--mp-color-sys--bg-sub);
 
-	grid-template-columns: auto repeat(13, var(--mp-grid--column-width));
+	grid-template-columns: auto repeat(
+			calc(
+				var(--mp-grid--group-col-count, 20) + var(--mp-grid--route-col-count, 1)
+			),
+			var(--mp-grid--column-width)
+		);
 	grid-template-rows: auto repeat(1440, var(--mp-grid--incr-min));
 	width: calc(100vw - 4rem);
 	margin-inline: 2rem;
@@ -65,16 +79,21 @@ body {
 		margin-block: calc(var(--mp-grid--outer-gutter) * -1);
 		grid-row: 1 / -1;
 		z-index: var(--mp-grid--z-layer--backdrop);
-		background-color: color-mix(in oklab, var(--color-sys-bg) 50%, transparent);
-		backdrop-filter: blur(2px);
+		background-color: color-mix(
+			in oklab,
+			var(--mp-color-sys--bg) 70%,
+			transparent
+		);
+		backdrop-filter: blur(3px);
 	}
 
 	&::before {
-		left: calc(var(--mp-grid--outer-gutter) * -1);
+		left: calc((var(--mp-grid--outer-gutter) * -1) - 1px);
 		grid-column: 1;
 	}
 
 	&::after {
+		/* right: 0; */
 		right: calc(var(--mp-grid--outer-gutter) * -1);
 		/* margin-inline-start: calc(var(--mp-grid--outer-gutter) * -1); */
 		grid-column: -2;
@@ -92,8 +111,42 @@ body {
 		}
 	}
 
+	&:not(.mp-grid--alt-route) {
+		.mp-route--alt {
+			display: none;
+		}
+
+		.mp-grid__alt-item {
+			display: none;
+		}
+	}
+
+	&.mp-grid--alt-route {
+		--mp-grid--route-col-count: 2;
+		&::after {
+			grid-column: -3 / span 2;
+		}
+
+		/* move main route items to "first" route column */
+		.mp-route:not(.mp-route--alt) {
+			grid-column: -3;
+			right: calc(var(--mp-grid--column-width) + var(--mp-grid--gap-length));
+		}
+
+		.mp-route--alt {
+			margin-inline-start: 0;
+		}
+
+		& > .mp-current > .mp-clock {
+			grid-column: -4;
+			right: calc(
+				(var(--mp-grid--column-width) + var(--mp-grid--gap-length)) * 2
+			);
+		}
+	}
+
 	& > .mp-lines {
-		--grid-line-color: var(--color-sys-surface-1);
+		--grid-line-color: var(--mp-color-sys--surface-1);
 
 		pointer-events: none;
 		position: relative;
@@ -111,13 +164,13 @@ body {
 		background-size: var(--mp-grid--length-15-min) var(--mp-grid--length-15-min);
 		background-position: top
 			calc(
-				var(--mp-grid-header-height, 1rem) + var(--mp-grid--gap-length) - 1px
+				var(--mp-grid--header-height, 1rem) + var(--mp-grid--gap-length) - 1px
 			)
 			center;
 	}
 
 	& > .mp-current {
-		--grid-line-color: var(--color-sys-surface-1);
+		--grid-line-color: var(--mp-color-sys--surface-1);
 		display: grid;
 		grid-template-columns: subgrid;
 		grid-template-rows: subgrid;
@@ -127,17 +180,17 @@ body {
 		z-index: var(--mp-grid--z-layer--current);
 		grid-row: calc(clamp(0, var(--time), 1440) + 2);
 		grid-column: 1 / -1;
-		border-top: 2px solid var(--color-sys-accent-1-intense);
+		border-top: 2px solid var(--mp-color-sys--accent-1-intense);
 		opacity: 0.7;
-		filter: drop-shadow(0 0 0.25rem var(--color-sys-accent-1-intense));
+		filter: drop-shadow(0 0 0.25rem var(--mp-color-sys--accent-1-intense));
 
 		& > .mp-clock {
 			grid-column: -3;
 			position: sticky;
 			right: calc(var(--mp-grid--column-width) + var(--mp-grid--gap-length));
 			margin-inline-start: 0.25rem;
-			background-color: var(--color-sys-accent-1-intense);
-			color: var(--color-sys-bg);
+			background-color: var(--mp-color-sys--accent-1-intense);
+			color: var(--mp-color-sys--bg);
 			justify-self: end;
 			font-weight: 700;
 			display: flex;
@@ -146,11 +199,11 @@ body {
 			padding: 0.125rem 0.25rem;
 		}
 	}
+}
 
-	& > :where(.mp-event, .mp-header, .mp-time) {
-		padding: 0.25rem;
-		border-radius: 0.25rem;
-	}
+:where(.mp-header, .mp-time) {
+	padding: 0.25rem;
+	border-radius: 0.25rem;
 }
 
 .mp-header {
@@ -159,7 +212,13 @@ body {
 	top: 0;
 	z-index: var(--mp-grid--z-layer--header-lvl-1);
 	box-shadow: var(--mp-grid--header-shadow);
-	background-color: var(--color-sys-surface-1);
+	background-color: var(--mp-color-sys--surface-1);
+	font-weight: 700;
+	border-block-end: 3px solid
+		var(
+			--mp-color-sys--release,
+			color-mix(in oklab, var(--mp-color-sys--fg) 25%, transparent)
+		);
 	&.mp-route {
 		z-index: var(--mp-grid--z-layer--header-lvl-2);
 	}
@@ -176,7 +235,7 @@ body {
 	position: sticky;
 	left: 0;
 	box-shadow: var(--mp-grid--header-shadow);
-	background-color: var(--color-sys-surface-1);
+	background-color: var(--mp-color-sys--surface-1);
 	z-index: var(--mp-grid--z-layer--time);
 
 	&:not(.mp-header) {
@@ -191,20 +250,140 @@ body {
 }
 
 .mp-event {
+	--mp-event--gap: 0.25rem;
 	position: relative;
 	z-index: var(--mp-grid--z-layer--event);
-	grid-row-end: span 5;
-	border: 2px solid color-mix(in oklab, var(--color-sys-fg) 15%, transparent);
-	background-color: var(--color-sys-surface-2);
+	grid-row-end: span max(5, var(--duration, 5));
+
+	display: grid;
+	gap: var(--mp-event--gap);
+	grid-template-columns: auto 1fr 3rem;
+	grid-template-rows: auto auto auto 1fr;
+	grid-template-areas: "title title actions" "start times actions" "waypoint times actions" "empty empty actions";
+	border: 2px solid
+		color-mix(in oklab, var(--mp-color-sys--fg) 15%, transparent);
+	background-color: var(--mp-color-sys--surface-2);
+	font-size: 0.875rem;
+	border-radius: 0.25rem;
+	overflow: clip;
 
 	&:not(.mp-route) {
 		&:not(:hover) {
 			background-color: color-mix(
 				in oklab,
-				var(--color-sys-surface-2) 80%,
+				var(--mp-color-sys--surface-2) 80%,
 				transparent
 			);
 		}
+
+		& .mp-event__actions {
+			background-color: color-mix(
+				in oklab,
+				var(--mp-color-sys--surface-1) 80%,
+				transparent
+			);
+		}
+	}
+
+	&.mp-event--added {
+		opacity: 0.7;
+		pointer-events: none;
+	}
+
+	& ul {
+		padding: 0;
+		list-style: none;
+	}
+}
+
+.mp-event__title {
+	grid-area: title;
+	padding: var(--mp-event--gap) 0 0 var(--mp-event--gap);
+}
+
+.mp-event__start {
+	grid-area: start;
+	padding-inline-start: var(--mp-event--gap);
+}
+
+.mp-event__waypoint {
+	grid-area: waypoint;
+	margin-inline-start: var(--mp-event--gap);
+	appearance: none;
+	border: none;
+	background: transparent;
+	width: 1rem;
+	height: 1rem;
+	background-color: blue;
+}
+
+.mp-event__times {
+	grid-area: times;
+	padding: var(--mp-event--gap);
+}
+
+.mp-event__durations {
+	display: flex;
+	gap: var(--mp-event--gap);
+	justify-content: space-between;
+
+	& dt {
+		margin-block-end: 0.125rem;
+	}
+}
+
+.mp-event__time-controls {
+	display: flex;
+	gap: var(--mp-event--gap);
+
+	& > li {
+		flex: 1;
+		width: 100%;
+	}
+
+	label {
+	}
+	input {
+		display: inline-block;
+		width: 100%;
+	}
+}
+
+.mp-event__durations dt,
+.mp-event__time-controls label {
+	text-transform: uppercase;
+	font-weight: 700;
+	font-size: 0.625rem;
+	line-height: 1;
+}
+
+.mp-event__actions {
+	grid-area: actions;
+	background-color: var(--mp-color-sys--surface-1);
+	display: flex;
+	flex-flow: column;
+	align-items: stretch;
+	justify-content: start;
+	gap: var(--mp-event--gap);
+	border-top-right-radius: 0.25rem;
+	border-bottom-right-radius: 0.25rem;
+	overflow: clip;
+
+	& > li {
+		display: flex;
+		flex: 1 1 100%;
+	}
+
+	& button {
+		display: block;
+		width: 100%;
+		appearance: none;
+		font: inherit;
+		border: none;
+		color: inherit;
+		line-height: 1;
+		cursor: pointer;
+		background: color-mix(in oklab, var(--mp-color-sys--bg) 25%, transparent);
 	}
 }
 
@@ -214,4 +393,32 @@ body {
 	position: sticky;
 	right: 0;
 	margin-inline-start: 0.25rem;
+}
+
+[data-release="Core"],
+[data-release="Season 1"],
+[data-release="Season 2"] {
+	--mp-color-sys--release: var(--mp-color-ref--release-core);
+}
+
+[data-release="Heart of Thorns"],
+[data-release="Season 3"] {
+	--mp-color-sys--release: var(--mp-color-ref--release-hot);
+}
+
+[data-release="Path of Fire"],
+[data-release="Season 4"] {
+	--mp-color-sys--release: var(--mp-color-ref--release-pof);
+}
+
+[data-release="The Icebrood Saga"] {
+	--mp-color-sys--release: var(--mp-color-ref--release-ibs);
+}
+
+[data-release="End of Dragons"] {
+	--mp-color-sys--release: var(--mp-color-ref--release-eod);
+}
+
+[data-release="Secrets of the Obscure"] {
+	--mp-color-sys--release: var(--mp-color-ref--release-soto);
 }
