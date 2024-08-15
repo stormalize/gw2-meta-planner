@@ -42,7 +42,7 @@ $clock_increments = array_map(
 	<p>Jump to time:</p>
 	<ul>
 		<li><a href="#route-event-0-0">First Item in Route</a></li>
-		<li>00:00</li>
+		<li><a href="#time-0"></a>00:00</a></li>
 		<li>01:00</li>
 		<li>02:00</li>
 		<li>03:00</li>
@@ -54,13 +54,13 @@ $clock_increments = array_map(
 		<li>09:00</li>
 		<li>10:00</li>
 		<li>11:00</li>
-		<li>12:00</li>
+		<li><a href="#time-720">12:00</a></li>
 	</ul>
 	<?php $group_col_total = count($data['groups']); ?>
 	<div class="mp-grid mp-grid--alt-route" style="--mp-grid--group-col-count: <?php echo $group_col_total; ?>">
 		<div class="mp-header mp-time">Time</div>
 		<?php foreach ($clock_increments as $v) { ?>
-			<p class="mp-time" style="--time: <?php echo $v['minutes']; ?>">
+			<p id="time-<?php echo $v['minutes']; ?>" class="mp-time" style="--time: <?php echo $v['minutes']; ?>">
 				<?php echo $v['time']; ?>
 			</p>
 		<?php }
