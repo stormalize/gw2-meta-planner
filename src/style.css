@@ -81,10 +81,12 @@ body {
 		z-index: var(--mp-grid--z-layer--backdrop);
 		background-color: color-mix(
 			in oklab,
-			var(--mp-color-sys--bg) 70%,
+			var(--mp-color-sys--bg) 60%,
 			transparent
 		);
 		backdrop-filter: blur(3px);
+		box-shadow: 0 0 1rem
+			color-mix(in oklab, var(--mp-color-sys--bg-sub) 25%, transparent);
 	}
 
 	&::before {
@@ -146,27 +148,23 @@ body {
 	}
 
 	& > .mp-lines {
-		--grid-line-color: var(--mp-color-sys--surface-1);
+		--mp-grid--line-color: var(--mp-color-sys--surface-1);
 
 		pointer-events: none;
 		position: relative;
 		z-index: var(--mp-grid--z-layer--lines);
-		grid-row: 1 / -1;
+		grid-row: 2 / -1;
 		grid-column: 1 / -1;
 		background-image: repeating-linear-gradient(
 			0deg,
-			var(--grid-line-color),
-			var(--grid-line-color) 2px,
+			var(--mp-grid--line-color),
+			var(--mp-grid--line-color) 2px,
 			transparent 2px,
 			transparent
 		);
 		background-repeat: repeat;
 		background-size: var(--mp-grid--length-15-min) var(--mp-grid--length-15-min);
-		background-position: top
-			calc(
-				var(--mp-grid--header-height, 1rem) + var(--mp-grid--gap-length) - 1px
-			)
-			center;
+		background-position: top -1px center;
 	}
 
 	& > .mp-current {
@@ -237,6 +235,10 @@ body {
 	box-shadow: var(--mp-grid--header-shadow);
 	background-color: var(--mp-color-sys--surface-1);
 	z-index: var(--mp-grid--z-layer--time);
+	scroll-margin-block-start: calc(
+		var(--mp-grid--header-height) + var(--mp-grid--gap-length) +
+			var(--mp-grid--outer-gutter)
+	);
 
 	&:not(.mp-header) {
 		grid-row-end: span 15;
