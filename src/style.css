@@ -271,6 +271,8 @@ body {
 	font-size: 0.875rem;
 	border-radius: 0.25rem;
 	overflow: clip;
+	container-type: size;
+	container-name: event;
 
 	&:not(.mp-route) {
 		&:not(:hover) {
@@ -377,6 +379,10 @@ body {
 	& > li {
 		display: flex;
 		flex: 1 1 100%;
+
+		@container event (min-height: 434px) {
+			flex: 0 0 4rem;
+		}
 	}
 
 	& button {
