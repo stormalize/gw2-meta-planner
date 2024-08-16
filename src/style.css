@@ -27,7 +27,7 @@ body {
 
 	background: var(--mp-color-sys--bg);
 	color: var(--mp-color-sys--fg);
-	font-family: system-ui, sans-serif;
+	font-family: "Noto Sans", sans-serif;
 }
 
 .mp-grid {
@@ -53,9 +53,8 @@ body {
 			var(--mp-grid--column-width)
 		);
 	grid-template-rows: auto repeat(1440, var(--mp-grid--incr-min));
-	width: calc(100vw - 4rem);
-	margin-inline: 2rem;
-	height: calc(80vh);
+	/* margin-inline: 2rem; */
+	height: 80vh;
 	overflow: scroll;
 	position: relative;
 	gap: var(--mp-grid--gap-length);
@@ -178,6 +177,10 @@ body {
 		z-index: var(--mp-grid--z-layer--current);
 		grid-row: calc(clamp(0, var(--time), 1440) + 2);
 		grid-column: 1 / -1;
+		scroll-margin-block-start: calc(
+			var(--mp-grid--header-height) + var(--mp-grid--gap-length) +
+				var(--mp-grid--outer-gutter)
+		);
 		border-top: 2px solid var(--mp-color-sys--accent-1-intense);
 		opacity: 0.7;
 		filter: drop-shadow(0 0 0.25rem var(--mp-color-sys--accent-1-intense));

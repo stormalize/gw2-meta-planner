@@ -33,6 +33,9 @@ $clock_increments = array_map(
 	<meta
 		name="viewport"
 		content="initial-scale=1.0, width=device-width, height=device-height, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+		rel="stylesheet" />
 	<link href="style.css" rel="stylesheet" type="text/css" />
 	<title>GW2 Meta Planner</title>
 </head>
@@ -41,6 +44,7 @@ $clock_increments = array_map(
 	<h1>GW2 Meta Planner</h1>
 	<p>Jump to time:</p>
 	<ul>
+		<li><a href="#time-current">Current Time</a></li>
 		<li><a href="#route-event-0-0">First Item in Route</a></li>
 		<li><a href="#time-0"></a>00:00</a></li>
 		<li>01:00</li>
@@ -56,8 +60,10 @@ $clock_increments = array_map(
 		<li>11:00</li>
 		<li><a href="#time-720">12:00</a></li>
 	</ul>
+	<label for="pref-enable-alt-route">Enable Alternate Route</label>
+	<input type="checkbox" id="pref-enable-alt-route">
 	<?php $group_col_total = count($data['groups']); ?>
-	<div class="mp-grid mp-grid--alt-route" style="--mp-grid--group-col-count: <?php echo $group_col_total; ?>">
+	<div class="mp-grid" style="--mp-grid--group-col-count: <?php echo $group_col_total; ?>">
 		<div class="mp-header mp-time">Time</div>
 		<?php foreach ($clock_increments as $v) { ?>
 			<p id="time-<?php echo $v['minutes']; ?>" class="mp-time" style="--time: <?php echo $v['minutes']; ?>">
@@ -129,9 +135,8 @@ $clock_increments = array_map(
 		} ?>
 		<div class="mp-header mp-route">Primary</div>
 		<div class="mp-header mp-route mp-route--alt">Secondary</div>
-		<p class="mp-event mp-route mp-route--alt" style="--time: 20">5</p>
 		<div class="mp-lines"></div>
-		<div class="mp-current" style="--time: 8">
+		<div id="time-current" class="mp-current" style="--time: 8">
 			<div class="mp-clock">20:08</div>
 		</div>
 	</div>
@@ -161,7 +166,7 @@ $clock_increments = array_map(
 		<ul class="mp-event__actions">
 			<li><button data-control="removefromroute" aria-label="Remove from route">1</button></li>
 			<li><button data-control="resetrouteitem" aria-label="Reset times">2</button></li>
-			<li class="mp-grid__alt-item"><button data-control="swaproute" aria-label="Swap to other route">3</button></li>
+			<li class="mp-grid__alt-item"><button data-control="togglealtroute" aria-label="Swap to other route" title="Swap Event to Other Route Option">3</button></li>
 		</ul>
 	</template>
 </body>
