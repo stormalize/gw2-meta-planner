@@ -94,10 +94,10 @@ body {
 		z-index: var(--mp-grid--z-layer--backdrop);
 		background-color: color-mix(
 			in oklab,
-			var(--mp-color-sys--bg) 60%,
+			var(--mp-color-sys--bg) 65%,
 			transparent
 		);
-		backdrop-filter: blur(3px);
+		backdrop-filter: blur(4px);
 		box-shadow: 0 0 1rem
 			color-mix(in oklab, var(--mp-color-sys--bg-sub) 25%, transparent);
 	}

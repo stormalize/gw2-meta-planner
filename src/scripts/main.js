@@ -1,82 +1,51 @@
 import { startClock } from "./modules/time.js";
-import { copyWaypointCode } from "./modules/route.js";
+import {
+	selectors as routeSelectors,
+	copyWaypointCode,
+	saveRouteData,
+	addEventItemToRoute,
+	removeEventItemFromRoute,
+	adjustRouteItemOffset,
+	adjustRouteItemDuration,
+	toggleAltRouteItem,
+} from "./modules/route.js";
+import DATA from "./modules/data.js";
 
 // selectors
-const EVENT = "mp-event";
-const ROUTE = "mp-route";
-const LINES = "mp-lines";
-const HEADER = "mp-header";
-const GRID = "mp-grid";
+const selectors = {
+	c_grid: "mp-grid",
+	c_header: "mp-header",
+	c_lines: "mp-lines",
+};
 
 // main grid
-const MAIN_GRID = document.querySelector(".mp-grid");
+const MAIN_GRID = document.querySelector(`.${selectors.c_grid}`);
 
-// saved data
-const data = {
-	route: [],
-	prefEnableAltRoute: false,
-};
+// helper function to keep preference updates in one spot
+function setPref(key, value) {
+	if (!key) {
+		console.warn("Please specify a key for a pref to save");
+		return;
+	}
 
-const supportedKeys = ["route", "prefEnableAltRoute"];
-
-const dataProxy = {
-	set(obj, prop, value) {
-		if (supportedKeys.includes(prop)) {
-			const success = Reflect.set(...arguments);
-			if (success) {
-				window.localStorage.setItem("mp__data", JSON.stringify(obj));
+	switch (key) {
+		case "enableAltRoute":
+			if (value) {
+				MAIN_GRID.classList.add(`${selectors.c_grid}--alt-route`);
+			} else {
+				MAIN_GRID.classList.remove(`${selectors.c_grid}--alt-route`);
 			}
-			return success;
-		} else {
-			console.warn("invalid property on main data object");
-		}
-	},
-};
+			break;
 
-const savedData = window.localStorage.getItem("mp__data");
-if (savedData) {
-	const savedObj = JSON.parse(savedData);
-	Object.entries(savedObj).forEach(([key, value]) => {
-		if (supportedKeys.includes(key)) {
-			data[key] = value;
-		}
-	});
+		default:
+			break;
+	}
+
+	// save value to key
+	DATA[`pref_${key}`] = value;
 }
 
-const DATA = new Proxy(data, dataProxy);
-// end saved data
-
-// live HTML collection of route items
-const ROUTE_ITEMS_COLLECTION = MAIN_GRID.getElementsByClassName(ROUTE);
-
-function saveRouteData() {
-	const data = Array.from(ROUTE_ITEMS_COLLECTION).reduce((list, routeItem) => {
-		// skip header items
-		if (!routeItem.classList.contains(HEADER)) {
-			list.push(getRouteItemSaveData(routeItem));
-		}
-		return list;
-	}, []);
-	DATA.route = data;
-}
-
-function getRouteItemSaveData(routeItem) {
-	const offsetEl = routeItem.querySelector("[data-control='offset']");
-	const durationEl = routeItem.querySelector("[data-control='duration']");
-
-	const id = routeItem.id?.replace("route-event-", "");
-	const offset = Number(offsetEl?.value);
-	const duration = Number(durationEl?.value);
-	const alt = routeItem.classList.contains(`${ROUTE}--alt`);
-
-	return {
-		id: id || null,
-		o: offset || 0,
-		d: duration || 0,
-		a: alt,
-	};
-}
-
+// initialization stuff
 function startScrollIntersectObserver() {
 	if ("IntersectionObserver" in window) {
 		const intersectHandler = (changes, observer) => {
@@ -113,48 +82,7 @@ function startScrollIntersectObserver() {
 	}
 }
 
-function handleRouteTimeControls(event) {
-	const warnClass = `${EVENT.replace(".", "")}--warning`;
-
-	if (!["offset", "duration"].includes(event.target.dataset.control)) {
-		return;
-	}
-
-	const routeEventItem = event.target.closest(".mp-route.mp-event");
-	if (routeEventItem) {
-		if (event.target.dataset.control === "offset") {
-			if (event.target.value) {
-				routeEventItem.style.setProperty("--offset", event.target.value);
-				if (
-					event.target.value >= Number(routeEventItem.dataset.max) &&
-					!routeEventItem.classList.contains(warnClass)
-				) {
-					routeEventItem.classList.add(warnClass);
-					routeEventItem.title =
-						"Offset pushes event past its maximum duration!";
-				} else if (
-					event.target.value < Number(routeEventItem.dataset.max) &&
-					routeEventItem.classList.contains(warnClass)
-				) {
-					routeEventItem.classList.remove(warnClass);
-					routeEventItem.title = "";
-				}
-			} else {
-				routeEventItem.style.removeProperty("--offset");
-			}
-		} else if (event.target.dataset.control === "duration") {
-			if (event.target.value) {
-				routeEventItem.style.setProperty("--duration", event.target.value);
-				// add `warn` class if offset > data-max, update title with message
-			} else {
-				routeEventItem.style.removeProperty("--duration");
-			}
-		}
-		saveRouteData();
-	}
-}
-
-function addRouteData(data) {
+function initializeRouteItemsFromData(data) {
 	data.forEach((item) => {
 		const metaEventItem = document.getElementById(`event-${item.id}`);
 		if (metaEventItem) {
@@ -167,121 +95,38 @@ function addRouteData(data) {
 	});
 }
 
-function addEventItemToRoute(
-	metaEventItem,
-	alt = false,
-	duration = false,
-	offset = false,
-	save = true
-) {
-	const newItem = metaEventItem.cloneNode(true);
-	const id = `route-${newItem.id}`;
-	const defaultDuration = duration || Number(newItem.dataset.avg) || 0;
-	const defaultOffset = offset || 0;
-
-	newItem.id = id;
-	newItem.classList.add(ROUTE.replace(".", ""));
-	newItem.style.gridColumnStart = null;
-	newItem.style.setProperty("--duration", defaultDuration);
-	if (alt) {
-		newItem.classList.add(`${ROUTE}--alt`);
-	}
-	if (defaultOffset) {
-		newItem.style.setProperty("--offset", defaultOffset);
+// event handlers
+function handleRouteTimeControls(event) {
+	if (!["offset", "duration"].includes(event.target.dataset.control)) {
+		return;
 	}
 
-	if (defaultOffset >= Number(newItem.dataset.max)) {
-		newItem.classList.add(`${EVENT.replace(".", "")}--warning`);
-		newItem.title = "Offset pushes event past its maximum duration!";
-	}
-
-	// replace times content
-	const timesContainer = newItem.querySelector(`.${EVENT}__times`);
-	if (timesContainer) {
-		const template = document.getElementById("route-time-controls");
-		const controls = template?.content.cloneNode(true);
-		if (controls) {
-			["offset", "duration"].forEach((type) => {
-				const label = controls.querySelector(`[for="route-event-${type}"]`);
-				const input = controls.getElementById(`route-event-${type}`);
-
-				label.htmlFor = `${id}-${type}`;
-				input.id = `${id}-${type}`;
-
-				if ("duration" === type) {
-					input.value = defaultDuration;
-				} else {
-					input.value = defaultOffset;
-				}
-			});
-			timesContainer.replaceChildren(controls);
+	const routeEventItem = event.target.closest(".mp-route.mp-event");
+	if (routeEventItem) {
+		if (event.target.dataset.control === "offset") {
+			adjustRouteItemOffset(routeEventItem, event.target.value);
+		} else if (event.target.dataset.control === "duration") {
+			adjustRouteItemDuration(routeEventItem, event.target.value);
 		}
-	}
-
-	// replace actions
-	const actionsContainer = newItem.querySelector(`.${EVENT}__actions`);
-	if (actionsContainer) {
-		const template = document.getElementById("route-actions");
-		const newActionsList = template?.content.cloneNode(true);
-		if (newActionsList) {
-			actionsContainer.replaceWith(newActionsList);
-		}
-	}
-
-	const time1 = Number(newItem.dataset.start);
-	const routeItems = document.querySelectorAll(`.${ROUTE}[data-start]`);
-	const notInserted = Array.from(routeItems).every((element) => {
-		const time2 = Number(element.dataset.start);
-		if (time2 > time1) {
-			element.before(newItem);
-			return false;
-		} else if (time2 === time1) {
-			element.after(newItem);
-			return false;
-		}
-		return true;
-	});
-
-	if (notInserted) {
-		// insert at end
-		const lines = document.querySelector(`.${LINES}`);
-		lines?.before(newItem);
-	}
-
-	metaEventItem.classList.add(`${EVENT}--added`);
-
-	if (save) {
 		saveRouteData();
 	}
 }
 
 function handleAddEventItemToRoute(event) {
-	const actionEl = event.target.closest(`.${EVENT}__actions button`);
+	const actionEl = event.target.closest(
+		`.${routeSelectors.c_event}__actions button`
+	);
 
-	if ("addtoroute" !== actionEl.dataset.control) {
+	if ("addtoroute" !== actionEl?.dataset.control) {
 		return;
 	}
 
-	const metaEventItem = event.target.closest(`.${EVENT}`);
+	const metaEventItem = event.target.closest(`.${routeSelectors.c_event}`);
 	if (metaEventItem) {
-		const addAlt = event.target.closest(`.${GRID}__alt-item`) !== null;
+		const addAlt =
+			event.target.closest(`.${selectors.c_grid}__alt-item`) !== null;
 		addEventItemToRoute(metaEventItem, addAlt);
 	}
-}
-
-function removeEventItemFromRoute(routeItem) {
-	const eventId = routeItem?.id?.replace("route-", "");
-	if (eventId) {
-		const metaEventItem = document.getElementById(eventId);
-		metaEventItem?.classList.remove(`${EVENT}--added`);
-	}
-	routeItem.remove();
-	saveRouteData();
-}
-
-function toggleAltRouteItem(routeItem) {
-	routeItem.classList.toggle(`${ROUTE}--alt`);
-	saveRouteData();
 }
 
 function handleRouteEventControls(event) {
@@ -291,15 +136,17 @@ function handleRouteEventControls(event) {
 		"resetrouteitem",
 	];
 
-	const actionEl = event.target.closest(`.${EVENT}__actions button`);
+	const actionEl = event.target.closest(
+		`.${routeSelectors.c_event}__actions button`
+	);
 
-	const action = actionEl.dataset.control;
+	const action = actionEl?.dataset.control;
 
 	if (!supportedControls.includes(action)) {
 		return;
 	}
 
-	const routeItem = event.target.closest(`.${ROUTE}`);
+	const routeItem = event.target.closest(`.${routeSelectors.c_route}`);
 
 	if (routeItem) {
 		switch (action) {
@@ -311,8 +158,8 @@ function handleRouteEventControls(event) {
 				toggleAltRouteItem(routeItem);
 				break;
 
-			case "togglealtroute":
-				toggleAltRouteItem(routeItem);
+			case "resetrouteitem":
+				// resetRouteItem(routeItem);
 				break;
 
 			default:
@@ -321,31 +168,8 @@ function handleRouteEventControls(event) {
 	}
 }
 
-function setPref(key, value) {
-	if (!key) {
-		console.warn("Please specify a key for a pref to save");
-		return;
-	}
-
-	switch (key) {
-		case "prefEnableAltRoute":
-			if (value) {
-				MAIN_GRID.classList.add(`${GRID}--alt-route`);
-			} else {
-				MAIN_GRID.classList.remove(`${GRID}--alt-route`);
-			}
-			break;
-
-		default:
-			break;
-	}
-
-	// save value to key
-	DATA[key] = value;
-}
-
 function handleAltRouteToggle(event) {
-	setPref("prefEnableAltRoute", event.target.checked);
+	setPref("enableAltRoute", event.target.checked);
 }
 
 function handleWaypointClick(event) {
@@ -378,26 +202,18 @@ function setup() {
 
 	// read saved data and set up
 	const altRouteInput = document.getElementById("pref-enable-alt-route");
-	altRouteInput.checked = DATA.prefEnableAltRoute;
-	if (DATA.prefEnableAltRoute) {
-		MAIN_GRID.classList.add(`${GRID}--alt-route`);
+	altRouteInput.checked = DATA.pref_enableAltRoute;
+	if (DATA.pref_enableAltRoute) {
+		MAIN_GRID.classList.add(`${selectors.c_grid}--alt-route`);
 	}
 	// add check if reading from URL, skip loading from localStorage
-	addRouteData(DATA.route);
+	initializeRouteItemsFromData(DATA.route);
 
 	registerEventListeners();
 	startScrollIntersectObserver();
 
 	startClock();
-	MAIN_GRID.classList.remove(`${GRID}--loading`);
+	MAIN_GRID.classList.remove(`${selectors.c_grid}--loading`);
 }
-
-// on load
-// update times: look for [data-start] -- if .time update innertext, if .event update .event-time innertext
-
-// event listeners:
-// settings/controls
-// events: offset, duration, waypoint copy, add to route, delete from route
-// add warn if end time (offset + duration) is past (greater than) data-max
 
 setup();
