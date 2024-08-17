@@ -256,7 +256,9 @@ function addEventItemToRoute(
 }
 
 function handleAddEventItemToRoute(event) {
-	if ("addtoroute" !== event.target.dataset.control) {
+	const actionEl = event.target.closest(`.${EVENT}__actions button`);
+
+	if ("addtoroute" !== actionEl.dataset.control) {
 		return;
 	}
 
@@ -289,7 +291,9 @@ function handleRouteEventControls(event) {
 		"resetrouteitem",
 	];
 
-	const action = event.target.dataset.control;
+	const actionEl = event.target.closest(`.${EVENT}__actions button`);
+
+	const action = actionEl.dataset.control;
 
 	if (!supportedControls.includes(action)) {
 		return;
@@ -301,6 +305,10 @@ function handleRouteEventControls(event) {
 		switch (action) {
 			case "removefromroute":
 				removeEventItemFromRoute(routeItem);
+				break;
+
+			case "togglealtroute":
+				toggleAltRouteItem(routeItem);
 				break;
 
 			case "togglealtroute":

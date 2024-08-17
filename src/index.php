@@ -118,10 +118,18 @@ $clock_increments = array_map(
 						</div>
 						<ul class="mp-event__actions">
 							<li>
-								<button data-control="addtoroute" aria-label="add to route">Add 1</button>
+								<button data-control="addtoroute" aria-label="add to primary route" title="Add to Primary route">
+									<svg class="mp-icon" viewbox="0 0 24 24">
+										<use href="./images/icon-library.svg#star-plus"></use>
+									</svg>
+								</button>
 							</li>
 							<li class="mp-grid__alt-item">
-								<button data-control="addtoroute" aria-label="add to alternate route">Add 2</button>
+								<button data-control="addtoroute" aria-label="add to alternate route" title="Add to Alternate route">
+									<svg class="mp-icon" viewbox="0 0 24 24">
+										<use href="./images/icon-library.svg#triangle-plus"></use>
+									</svg>
+								</button>
 							</li>
 						</ul>
 					</div>
@@ -130,8 +138,18 @@ $clock_increments = array_map(
 			}
 			++$group_col_count;
 		} ?>
-		<div class="mp-header mp-route">Primary</div>
-		<div class="mp-header mp-route mp-route--alt">Secondary</div>
+		<div class="mp-header mp-route">
+			<svg class="mp-icon mp-icon--inline" viewbox="0 0 24 24">
+				<use href="./images/icon-library.svg#star"></use>
+			</svg>
+			<span class="mp-grid__alt-item">Primary </span>Route
+		</div>
+		<div class="mp-header mp-route mp-route--alt">
+			<svg class="mp-icon mp-icon--inline" viewbox="0 0 24 24">
+				<use href="./images/icon-library.svg#triangle"></use>
+			</svg>
+			Alternate Route
+		</div>
 		<div class="mp-lines"></div>
 		<div id="time-current" class="mp-current" style="--time: 0">
 			<div id="clock" class="mp-clock">00:00</div>
@@ -141,7 +159,7 @@ $clock_increments = array_map(
 	<template id="route-time-controls">
 		<ul class="mp-event__time-controls">
 			<li>
-				<label for="route-event-offset">Offset</label>
+				<label for="route-event-offset">Delay</label>
 				<input
 					data-control="offset"
 					id="route-event-offset"
@@ -161,9 +179,21 @@ $clock_increments = array_map(
 	</template>
 	<template id="route-actions">
 		<ul class="mp-event__actions">
-			<li><button data-control="removefromroute" aria-label="Remove from route">1</button></li>
-			<li><button data-control="resetrouteitem" aria-label="Reset times">2</button></li>
-			<li class="mp-grid__alt-item"><button data-control="togglealtroute" aria-label="Swap to other route" title="Swap Event to Other Route Option">3</button></li>
+			<li><button data-control="removefromroute" aria-label="Remove from route" title="Remove from route">
+					<svg class="mp-icon" viewbox="0 0 24 24">
+						<use href="./images/icon-library.svg#trash"></use>
+					</svg>
+				</button></li>
+			<li><button data-control="resetrouteitem" aria-label="Reset times" title="Reset offset and estimate to default">
+					<svg class="mp-icon" viewbox="0 0 24 24">
+						<use href="./images/icon-library.svg#clock-reset"></use>
+					</svg>
+				</button></li>
+			<li class="mp-grid__alt-item"><button data-control="togglealtroute" aria-label="Swap to other route" title="Swap Event to Other Route Option">
+					<svg class="mp-icon" viewbox="0 0 24 24">
+						<use href="./images/icon-library.svg#arrows-swap-h"></use>
+					</svg>
+				</button></li>
 		</ul>
 	</template>
 </body>

@@ -32,6 +32,18 @@ body {
 	font-family: system-ui, sans-serif;
 }
 
+.mp-icon {
+	height: 1.5rem;
+	width: 1.5rem;
+	fill: currentColor;
+}
+
+.mp-icon--inline {
+	height: 1em;
+	width: 1em;
+	vertical-align: -0.125em;
+}
+
 .mp-grid {
 	--mp-grid--incr-min: 1rem;
 	--mp-grid--route-col-count: 1;
@@ -286,13 +298,11 @@ body {
 	padding-inline-start: 0.5rem;
 
 	&:not(.mp-route) {
-		&:not(:hover) {
-			background-color: color-mix(
-				in oklab,
-				var(--mp-color-sys--surface-2) 80%,
-				transparent
-			);
-		}
+		background-color: color-mix(
+			in oklab,
+			var(--mp-color-sys--surface-2) 80%,
+			transparent
+		);
 
 		& .mp-event__actions {
 			background-color: color-mix(
@@ -320,7 +330,7 @@ body {
 	}
 
 	&.mp-event--added {
-		opacity: 0.7;
+		filter: brightness(0.4);
 		pointer-events: none;
 	}
 
@@ -397,19 +407,17 @@ body {
 }
 
 .mp-event__time-controls {
-	display: flex;
-	gap: var(--mp-event--gap);
-
 	& > li {
-		flex: 1;
-		width: 100%;
+		display: flex;
+		align-items: center;
+		gap: var(--mp-event--gap);
 	}
 
-	label {
-	}
+	label,
 	input {
-		display: inline-block;
+		display: block;
 		width: 100%;
+		flex: 1;
 	}
 }
 
@@ -450,10 +458,19 @@ body {
 		font: inherit;
 		border: none;
 		color: inherit;
-		padding: 0;
 		line-height: 1;
 		cursor: pointer;
 		background: color-mix(in oklab, var(--mp-color-sys--bg) 25%, transparent);
+		--mp-event--action-shadow: color-mix(
+			in oklab,
+			var(--mp-color-sys--bg-sub) 75%,
+			transparent
+		);
+
+		&:hover {
+			background: linear-gradient(45deg, #680fcf, #6c3374);
+			box-shadow: inset 0 0 0.25rem 1px var(--mp-event--action-shadow);
+		}
 	}
 }
 
