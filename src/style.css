@@ -18,6 +18,7 @@ body {
 	--mp-color-sys--fg: #dddde4;
 	--mp-color-sys--accent-1-muted: #534518;
 	--mp-color-sys--accent-1-intense: #d3aa26;
+	--mp-color-sys--warning: #ebff35;
 
 	--mp-color-ref--release-core: #cc4141;
 	--mp-color-ref--release-hot: #49a849;
@@ -282,6 +283,7 @@ body {
 	border-radius: 0.25rem;
 	container-type: size;
 	container-name: event;
+	padding-inline-start: 0.5rem;
 
 	&:not(.mp-route) {
 		&:not(:hover) {
@@ -301,9 +303,35 @@ body {
 		}
 	}
 
+	&::before {
+		content: "";
+		display: block;
+		position: absolute;
+		background-color: var(
+			--mp-color-sys--release,
+			color-mix(in oklab, var(--mp-color-sys--fg) 25%, transparent)
+		);
+		top: 0;
+		bottom: 0;
+		left: 0.25rem;
+		width: 0.25rem;
+		z-index: -1;
+		opacity: 0.5;
+	}
+
 	&.mp-event--added {
 		opacity: 0.7;
 		pointer-events: none;
+	}
+
+	&.mp-event--warning {
+		& .mp-event__title {
+			color: var(--mp-color-sys--warning);
+			&::before {
+				content: " ! ";
+				font-weight: 700;
+			}
+		}
 	}
 
 	& ul {

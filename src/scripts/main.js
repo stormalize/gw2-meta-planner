@@ -114,6 +114,8 @@ function startScrollIntersectObserver() {
 }
 
 function handleRouteTimeControls(event) {
+	const warnClass = `${EVENT.replace(".", "")}--warning`;
+
 	if (!["offset", "duration"].includes(event.target.dataset.control)) {
 		return;
 	}
@@ -123,7 +125,20 @@ function handleRouteTimeControls(event) {
 		if (event.target.dataset.control === "offset") {
 			if (event.target.value) {
 				routeEventItem.style.setProperty("--offset", event.target.value);
-				// add `warn` class if offset > data-max, update title with message
+				if (
+					event.target.value >= Number(routeEventItem.dataset.max) &&
+					!routeEventItem.classList.contains(warnClass)
+				) {
+					routeEventItem.classList.add(warnClass);
+					routeEventItem.title =
+						"Offset pushes event past its maximum duration!";
+				} else if (
+					event.target.value < Number(routeEventItem.dataset.max) &&
+					routeEventItem.classList.contains(warnClass)
+				) {
+					routeEventItem.classList.remove(warnClass);
+					routeEventItem.title = "";
+				}
 			} else {
 				routeEventItem.style.removeProperty("--offset");
 			}
@@ -173,6 +188,11 @@ function addEventItemToRoute(
 	}
 	if (defaultOffset) {
 		newItem.style.setProperty("--offset", defaultOffset);
+	}
+
+	if (defaultOffset >= Number(newItem.dataset.max)) {
+		newItem.classList.add(`${EVENT.replace(".", "")}--warning`);
+		newItem.title = "Offset pushes event past its maximum duration!";
 	}
 
 	// replace times content
