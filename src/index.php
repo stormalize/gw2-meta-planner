@@ -59,6 +59,12 @@ $clock_increments = array_map(
 	</ul>
 	<label for="pref-enable-alt-route">Enable Alternate Route</label>
 	<input type="checkbox" id="pref-enable-alt-route">
+	<label for="pref-default-duration">Default Estimate</label>
+	<select id="pref-default-duration">
+		<option value="min">Minumum</option>
+		<option selected="" value="avg">Average</option>
+		<option value="max">Maximum</option>
+	</select>
 	<?php $group_col_total = count($data['groups']); ?>
 	<div class="mp-grid mp-grid--loading" style="--mp-grid--group-col-count: <?php echo $group_col_total; ?>">
 		<div class="mp-header mp-time">Time</div>

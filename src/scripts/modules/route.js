@@ -64,7 +64,8 @@ function addEventItemToRoute(
 ) {
 	const newItem = metaEventItem.cloneNode(true);
 	const id = `route-${newItem.id}`;
-	const defaultDuration = duration || Number(newItem.dataset.avg) || 0;
+	const defaultDuration =
+		duration || Number(newItem.dataset[DATA.pref_defaultDuration]) || 0;
 	const defaultOffset = offset || 0;
 
 	newItem.id = id;
@@ -178,18 +179,32 @@ function adjustRouteItemOffset(routeItem, newOffset) {
 	} else {
 		routeItem.style.removeProperty("--offset");
 	}
+
+	return newOffset;
 }
 
-function adjustRouteItemDuration(routeItem, newDuration) {
-	if (newDuration) {
-		routeItem.style.setProperty("--duration", newDuration);
-	} else {
-		routeItem.style.removeProperty("--duration");
-	}
+function adjustRouteItemDuration(routeItem, newDuration = false) {
+	const duration =
+		newDuration || Number(routeItem.dataset[DATA.pref_defaultDuration]) || 0;
+	routeItem.style.setProperty("--duration", duration);
+
+	return duration;
 }
 
 function toggleAltRouteItem(routeItem) {
 	routeItem.classList.toggle(`${selectors.c_route}--alt`);
+	saveRouteData();
+}
+
+function resetTimesForRouteItem(routeItem) {
+	const newOffset = adjustRouteItemOffset(routeItem, 0);
+	const newDuration = adjustRouteItemDuration(routeItem);
+
+	// update controls
+	const offsetInput = routeItem.querySelector("[data-control='offset']");
+	const durationInput = routeItem.querySelector("[data-control='duration']");
+	offsetInput.value = newOffset;
+	durationInput.value = newDuration;
 	saveRouteData();
 }
 
@@ -201,5 +216,6 @@ export {
 	removeEventItemFromRoute,
 	adjustRouteItemOffset,
 	adjustRouteItemDuration,
+	resetTimesForRouteItem,
 	toggleAltRouteItem,
 };

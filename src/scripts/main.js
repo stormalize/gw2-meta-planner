@@ -7,19 +7,17 @@ import {
 	removeEventItemFromRoute,
 	adjustRouteItemOffset,
 	adjustRouteItemDuration,
+	resetTimesForRouteItem,
 	toggleAltRouteItem,
 } from "./modules/route.js";
+import selectors from "./modules/selectors.js";
 import DATA from "./modules/data.js";
 
 // selectors
-const selectors = {
-	c_grid: "mp-grid",
-	c_header: "mp-header",
-	c_lines: "mp-lines",
-};
+const C_GRID = "mp-grid";
 
 // main grid
-const MAIN_GRID = document.querySelector(`.${selectors.c_grid}`);
+const MAIN_GRID = document.querySelector(`.${C_GRID}`);
 
 // helper function to keep preference updates in one spot
 function setPref(key, value) {
@@ -31,10 +29,13 @@ function setPref(key, value) {
 	switch (key) {
 		case "enableAltRoute":
 			if (value) {
-				MAIN_GRID.classList.add(`${selectors.c_grid}--alt-route`);
+				MAIN_GRID.classList.add(`${C_GRID}--alt-route`);
 			} else {
-				MAIN_GRID.classList.remove(`${selectors.c_grid}--alt-route`);
+				MAIN_GRID.classList.remove(`${C_GRID}--alt-route`);
 			}
+			break;
+
+		case "defaultDuration":
 			break;
 
 		default:
@@ -123,8 +124,7 @@ function handleAddEventItemToRoute(event) {
 
 	const metaEventItem = event.target.closest(`.${routeSelectors.c_event}`);
 	if (metaEventItem) {
-		const addAlt =
-			event.target.closest(`.${selectors.c_grid}__alt-item`) !== null;
+		const addAlt = event.target.closest(`.${C_GRID}__alt-item`) !== null;
 		addEventItemToRoute(metaEventItem, addAlt);
 	}
 }
@@ -159,7 +159,7 @@ function handleRouteEventControls(event) {
 				break;
 
 			case "resetrouteitem":
-				// resetRouteItem(routeItem);
+				resetTimesForRouteItem(routeItem);
 				break;
 
 			default:
@@ -170,6 +170,10 @@ function handleRouteEventControls(event) {
 
 function handleAltRouteToggle(event) {
 	setPref("enableAltRoute", event.target.checked);
+}
+
+function handleDefaultDurationChange(event) {
+	setPref("defaultDuration", event.target.value);
 }
 
 function handleWaypointClick(event) {
@@ -189,9 +193,17 @@ function registerEventListeners() {
 	document.addEventListener("click", handleRouteEventControls);
 	// route items: waypoint copy
 	document.addEventListener("click", handleWaypointClick);
-	// prefs:
+	// prefs: alt route
 	const altRouteInput = document.getElementById("pref-enable-alt-route");
 	altRouteInput?.addEventListener("change", handleAltRouteToggle);
+	// prefs: default duration
+	const defaultDurationSelect = document.getElementById(
+		selectors.id_prefDefaultDuration
+	);
+	defaultDurationSelect?.addEventListener(
+		"change",
+		handleDefaultDurationChange
+	);
 }
 
 function setup() {
@@ -201,11 +213,18 @@ function setup() {
 	MAIN_GRID.style.setProperty("--mp-grid--header-height", `${height}px`);
 
 	// read saved data and set up
+	// prefs: alt route
 	const altRouteInput = document.getElementById("pref-enable-alt-route");
 	altRouteInput.checked = DATA.pref_enableAltRoute;
 	if (DATA.pref_enableAltRoute) {
-		MAIN_GRID.classList.add(`${selectors.c_grid}--alt-route`);
+		MAIN_GRID.classList.add(`${C_GRID}--alt-route`);
 	}
+	// prefs: default duration
+	const defaultDurationSelect = document.getElementById(
+		selectors.id_prefDefaultDuration
+	);
+	defaultDurationSelect.value = DATA.pref_defaultDuration;
+
 	// add check if reading from URL, skip loading from localStorage
 	initializeRouteItemsFromData(DATA.route);
 
@@ -213,7 +232,7 @@ function setup() {
 	startScrollIntersectObserver();
 
 	startClock();
-	MAIN_GRID.classList.remove(`${selectors.c_grid}--loading`);
+	MAIN_GRID.classList.remove(`${C_GRID}--loading`);
 }
 
 setup();
