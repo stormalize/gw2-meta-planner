@@ -13,14 +13,77 @@ function handle_assets()
 {
 	global $in_path, $out_path;
 
-	foreach (['css', 'js'] as $type) {
-		$files = glob($in_path . '/*.' . $type);
-		foreach ($files as $file) {
-			$outfile = str_replace($in_path, $out_path, $file);
-			print "COPYING $file to $outfile\n";
-			copy($file, $outfile);
+	foreach (['scripts', 'images'] as $type) {
+		$folder = $in_path . '/' . $type;
+		$target = $out_path . '/' . $type;
+		print "COPYING $folder to $target\n";
+		xcopy($folder, $target);
+	}
+
+	// styles file
+	return copy($in_path . '/style.css', $out_path . '/style.css');
+}
+
+function xcopy($source, $dest, $permissions = 0755)
+{
+	$sourceHash = hashDirectory($source);
+	// Check for symlinks
+	if (is_link($source)) {
+		return symlink(readlink($source), $dest);
+	}
+
+	// Simple copy for a file
+	if (is_file($source)) {
+		return copy($source, $dest);
+	}
+
+	// Make destination directory
+	if (!is_dir($dest)) {
+		mkdir($dest, $permissions);
+	}
+
+	// Loop through the folder
+	$dir = dir($source);
+	while (false !== $entry = $dir->read()) {
+		// Skip pointers
+		if ($entry == '.' || $entry == '..') {
+			continue;
+		}
+
+		// Deep copy directories
+		if ($sourceHash != hashDirectory($source . "/" . $entry)) {
+			xcopy("$source/$entry", "$dest/$entry", $permissions);
 		}
 	}
+
+	// Clean up
+	$dir->close();
+	return true;
+}
+
+// In case of coping a directory inside itself, there is a need to hash check the directory otherwise and infinite loop of coping is generated
+function hashDirectory($directory)
+{
+	if (! is_dir($directory)) {
+		return false;
+	}
+
+	$files = array();
+	$dir = dir($directory);
+
+	while (false !== ($file = $dir->read())) {
+		if ($file != '.' and $file != '..') {
+			if (is_dir($directory . '/' . $file)) {
+				$files[] = hashDirectory($directory . '/' . $file);
+			} else {
+				$files[] = md5_file($directory . '/' . $file);
+			}
+		}
+	}
+
+	$dir->close();
+
+	return md5(implode('', $files));
 }
 
 function build_file($file_path)

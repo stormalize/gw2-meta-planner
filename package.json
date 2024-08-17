@@ -3,7 +3,7 @@
 	"version": "2.0.0-dev.1",
 	"description": "List of metas in Guild Wars 2, with ability to put together a custom meta train",
 	"scripts": {
-		"build": "php build.php ",
+		"build": "php build.php --assets",
 		"start": "node index.mjs",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
