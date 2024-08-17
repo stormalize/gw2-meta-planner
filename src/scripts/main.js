@@ -1,3 +1,6 @@
+import { startClock } from "./modules/time.js";
+import { copyWaypointCode } from "./modules/route.js";
+
 // selectors
 const EVENT = "mp-event";
 const ROUTE = "mp-route";
@@ -317,6 +320,14 @@ function handleAltRouteToggle(event) {
 	setPref("prefEnableAltRoute", event.target.checked);
 }
 
+function handleWaypointClick(event) {
+	if ("waypointcopy" !== event.target.dataset.control) {
+		return;
+	}
+
+	copyWaypointCode(event.target);
+}
+
 function registerEventListeners() {
 	// event items: add to route
 	document.addEventListener("click", handleAddEventItemToRoute);
@@ -324,12 +335,15 @@ function registerEventListeners() {
 	document.addEventListener("change", handleRouteTimeControls);
 	// route items: remove/swap/reset
 	document.addEventListener("click", handleRouteEventControls);
+	// route items: waypoint copy
+	document.addEventListener("click", handleWaypointClick);
 	// prefs:
 	const altRouteInput = document.getElementById("pref-enable-alt-route");
 	altRouteInput?.addEventListener("change", handleAltRouteToggle);
 }
 
 function setup() {
+	MAIN_GRID.classList.add(`${GRID}--loading`);
 	// check header height once, in case any groups have a long title
 	const header = document.querySelector(".mp-header");
 	const height = header.getBoundingClientRect().height;
@@ -346,6 +360,9 @@ function setup() {
 
 	registerEventListeners();
 	startScrollIntersectObserver();
+
+	startClock();
+	MAIN_GRID.classList.remove(`${GRID}--loading`);
 }
 
 // on load

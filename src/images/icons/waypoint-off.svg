@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>waypoint-off</title>
+    <g id="waypoint-off" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M23,19 L24.5,20.5 L16,29 L7.5,20.5 L9,19 L16,26 L23,19 Z" id="Combined-Shape" fill="#A5A5A5"></path>
+        <path d="M16,3 L29,16 L25.5,19.5 L16,10 L6.5,19.5 L3,16 L16,3 Z" id="Combined-Shape" fill="#A5A5A5"></path>
+        <polygon id="Path-4" fill="#25DFFF" opacity="0.699999988" points="11 18 16 13 21 18 16 23"></polygon>
+    </g>
+</svg>

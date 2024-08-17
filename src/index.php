@@ -46,7 +46,7 @@ $clock_increments = array_map(
 	<ul>
 		<li><a href="#time-current">Current Time</a></li>
 		<li><a href="#route-event-0-0">First Item in Route</a></li>
-		<li><a href="#time-0"></a>00:00</a></li>
+		<li><a href="#time-0" data-start="0">00:00</a></li>
 		<li>01:00</li>
 		<li>02:00</li>
 		<li>03:00</li>
@@ -58,7 +58,7 @@ $clock_increments = array_map(
 		<li>09:00</li>
 		<li>10:00</li>
 		<li>11:00</li>
-		<li><a href="#time-720">12:00</a></li>
+		<li><a href="#time-720" data-start="720">12:00</a></li>
 	</ul>
 	<label for="pref-enable-alt-route">Enable Alternate Route</label>
 	<input type="checkbox" id="pref-enable-alt-route">
@@ -66,7 +66,7 @@ $clock_increments = array_map(
 	<div class="mp-grid" style="--mp-grid--group-col-count: <?php echo $group_col_total; ?>">
 		<div class="mp-header mp-time">Time</div>
 		<?php foreach ($clock_increments as $v) { ?>
-			<p id="time-<?php echo $v['minutes']; ?>" class="mp-time" style="--time: <?php echo $v['minutes']; ?>">
+			<p id="time-<?php echo $v['minutes']; ?>" class="mp-time" data-start="<?php echo $v['minutes']; ?>" style="--time: <?php echo $v['minutes']; ?>">
 				<?php echo $v['time']; ?>
 			</p>
 		<?php }
@@ -101,7 +101,7 @@ $clock_increments = array_map(
 					">
 						<p class="mp-event__title"><?php echo $event['name']; ?></p>
 						<p class="mp-event__start"><?php echo get_time_from_reset_offset($time_offset); ?></p>
-						<button class="mp-event__waypoint" aria-label="copy waypoint code" title="Copy Waypoint <?php echo $event['waypoint']; ?>"></button>
+						<button class="mp-event__waypoint" data-control="waypointcopy" aria-label="copy waypoint code" title="Copy Waypoint <?php echo $event['waypoint']; ?>"></button>
 						<div class="mp-event__times">
 							<dl class="mp-event__durations">
 								<div>
@@ -136,11 +136,11 @@ $clock_increments = array_map(
 		<div class="mp-header mp-route">Primary</div>
 		<div class="mp-header mp-route mp-route--alt">Secondary</div>
 		<div class="mp-lines"></div>
-		<div id="time-current" class="mp-current" style="--time: 8">
-			<div class="mp-clock">20:08</div>
+		<div id="time-current" class="mp-current" style="--time: 0">
+			<div id="clock" class="mp-clock">00:00</div>
 		</div>
 	</div>
-	<script type="module" src="script.js"></script>
+	<script type="module" src="./scripts/main.js"></script>
 	<template id="route-time-controls">
 		<ul class="mp-event__time-controls">
 			<li>
