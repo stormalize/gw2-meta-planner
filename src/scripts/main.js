@@ -343,7 +343,6 @@ function registerEventListeners() {
 }
 
 function setup() {
-	MAIN_GRID.classList.add(`${GRID}--loading`);
 	// check header height once, in case any groups have a long title
 	const header = document.querySelector(".mp-header");
 	const height = header.getBoundingClientRect().height;

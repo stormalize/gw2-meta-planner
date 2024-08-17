@@ -8,8 +8,12 @@ async function copyWaypointCode(button) {
 	const code = button.title.replace("Copy Waypoint ", "");
 	try {
 		await navigator.clipboard.writeText(code);
+		button.dataset.toggletip = "Copied!";
+		setTimeout(() => {
+			delete button.dataset.toggletip;
+		}, 1000);
 	} catch (error) {
-		console.error(error.message);
+		console.warn("failed to copy waypoint code to clipboard");
 	}
 }
 

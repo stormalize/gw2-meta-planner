@@ -14,6 +14,7 @@ body {
 	--mp-color-sys--bg-sub: #0d0d0e;
 	--mp-color-sys--surface-1: #2e2e31;
 	--mp-color-sys--surface-2: #3d3d42;
+	--mp-color-sys--border: #55555e;
 	--mp-color-sys--fg: #dddde4;
 	--mp-color-sys--accent-1-muted: #534518;
 	--mp-color-sys--accent-1-intense: #d3aa26;
@@ -27,7 +28,7 @@ body {
 
 	background: var(--mp-color-sys--bg);
 	color: var(--mp-color-sys--fg);
-	font-family: "Noto Sans", sans-serif;
+	font-family: system-ui, sans-serif;
 }
 
 .mp-grid {
@@ -90,25 +91,31 @@ body {
 
 	&::before {
 		left: calc((var(--mp-grid--outer-gutter) * -1) - 1px);
+		border-inline-end: 1px solid
+			color-mix(in oklab, var(--mp-color-sys--border) 25%, transparent);
 		grid-column: 1;
+		margin-inline-end: calc(var(--mp-grid--outer-gutter) * -1);
 	}
 
 	&::after {
-		/* right: 0; */
+		right: 0;
 		right: calc(var(--mp-grid--outer-gutter) * -1);
-		/* margin-inline-start: calc(var(--mp-grid--outer-gutter) * -1); */
+		border-inline-start: 1px solid
+			color-mix(in oklab, var(--mp-color-sys--border) 25%, transparent);
+		margin-inline-start: calc(var(--mp-grid--outer-gutter) * -1);
+		/* margin-inline-start: calc(var(--mp-grid--outer-gutter) * -2); */
 		grid-column: -2;
 	}
 
 	&.scroll-start {
 		&::before {
-			margin-inline-end: calc(var(--mp-grid--outer-gutter) * -2);
+			margin-inline-end: calc(var(--mp-grid--outer-gutter) * -3);
 		}
 	}
 
 	&.scroll-end {
 		&::after {
-			margin-inline-start: calc(var(--mp-grid--outer-gutter) * -1);
+			margin-inline-start: calc(var(--mp-grid--outer-gutter) * -2);
 		}
 	}
 
@@ -144,6 +151,10 @@ body {
 				(var(--mp-grid--column-width) + var(--mp-grid--gap-length)) * 2
 			);
 		}
+	}
+
+	&.mp-grid--loading {
+		border-block-start: 0.5rem solid red;
 	}
 
 	& > .mp-lines {
@@ -262,14 +273,13 @@ body {
 	display: grid;
 	gap: var(--mp-event--gap);
 	grid-template-columns: auto 1fr 3rem;
-	grid-template-rows: auto auto auto 1fr;
-	grid-template-areas: "title title actions" "start times actions" "waypoint times actions" "empty empty actions";
+	grid-template-rows: auto auto 1fr;
+	grid-template-areas: "title title actions" "start times actions" "waypoint times actions";
 	border: 2px solid
 		color-mix(in oklab, var(--mp-color-sys--fg) 15%, transparent);
 	background-color: var(--mp-color-sys--surface-2);
 	font-size: 0.875rem;
 	border-radius: 0.25rem;
-	overflow: clip;
 	container-type: size;
 	container-name: event;
 
@@ -305,6 +315,7 @@ body {
 .mp-event__title {
 	grid-area: title;
 	padding: var(--mp-event--gap) 0 0 var(--mp-event--gap);
+	line-height: 1.15;
 }
 
 .mp-event__start {
@@ -319,6 +330,9 @@ body {
 	appearance: none;
 	border: none;
 	background: transparent;
+	font: inherit;
+	color: inherit;
+	line-height: 1;
 	width: 2rem;
 	height: 2rem;
 	background-image: url("./images/icons/waypoint-off.svg");
@@ -339,7 +353,7 @@ body {
 
 .mp-event__times {
 	grid-area: times;
-	align-self: center;
+	align-self: start;
 	padding: var(--mp-event--gap);
 }
 
@@ -390,6 +404,7 @@ body {
 	border-top-right-radius: 0.25rem;
 	border-bottom-right-radius: 0.25rem;
 	overflow: clip;
+	max-height: 100%;
 
 	& > li {
 		display: flex;
@@ -407,6 +422,7 @@ body {
 		font: inherit;
 		border: none;
 		color: inherit;
+		padding: 0;
 		line-height: 1;
 		cursor: pointer;
 		background: color-mix(in oklab, var(--mp-color-sys--bg) 25%, transparent);
@@ -447,4 +463,23 @@ body {
 
 [data-release="Secrets of the Obscure"] {
 	--mp-color-sys--release: var(--mp-color-ref--release-soto);
+}
+
+[data-toggletip] {
+	position: relative;
+	&::after {
+		content: attr(data-toggletip);
+		display: block;
+		position: absolute;
+		left: 50%;
+		top: calc(100% + 0.25rem);
+		transform: translateX(-50%);
+		background-color: var(--mp-color-sys--bg);
+		padding: 0.5rem;
+		font-size: 0.75rem;
+		border-radius: 2px;
+		border: 1px solid var(--mp-color-sys--surface-2);
+		box-shadow: 0 0.125rem 0
+			color-mix(in oklab, var(--mp-color-sys--bg-sub) 25%, transparent);
+	}
 }

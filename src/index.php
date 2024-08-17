@@ -33,9 +33,6 @@ $clock_increments = array_map(
 	<meta
 		name="viewport"
 		content="initial-scale=1.0, width=device-width, height=device-height, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
-		rel="stylesheet" />
 	<link href="style.css" rel="stylesheet" type="text/css" />
 	<title>GW2 Meta Planner</title>
 </head>
@@ -63,7 +60,7 @@ $clock_increments = array_map(
 	<label for="pref-enable-alt-route">Enable Alternate Route</label>
 	<input type="checkbox" id="pref-enable-alt-route">
 	<?php $group_col_total = count($data['groups']); ?>
-	<div class="mp-grid" style="--mp-grid--group-col-count: <?php echo $group_col_total; ?>">
+	<div class="mp-grid mp-grid--loading" style="--mp-grid--group-col-count: <?php echo $group_col_total; ?>">
 		<div class="mp-header mp-time">Time</div>
 		<?php foreach ($clock_increments as $v) { ?>
 			<p id="time-<?php echo $v['minutes']; ?>" class="mp-time" data-start="<?php echo $v['minutes']; ?>" style="--time: <?php echo $v['minutes']; ?>">
