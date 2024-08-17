@@ -40,7 +40,7 @@
 			"name": "Karka Queen",
 			"group": "Hard World Bosses",
 			"waypoint": "[&BNUGAAA=]",
-			"times": [2, 6, 10.5, 15, 19, 23],
+			"times": [2, 6, 10.5, 15, 18, 23],
 			"min": 15,
 			"avg": 20,
 			"max": 30
