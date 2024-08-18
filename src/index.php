@@ -34,6 +34,7 @@ $clock_increments = array_map(
 		name="viewport"
 		content="initial-scale=1.0, width=device-width, height=device-height, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<link href="style.css" rel="stylesheet" type="text/css" />
+	<link rel="icon" href="./images/ancient-scroll.png">
 	<title>GW2 Meta Planner</title>
 </head>
 
