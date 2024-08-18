@@ -9,6 +9,12 @@ export const selectors = {
 	s_time: "[data-start]",
 };
 
+/**
+ * Wrapper around setTimeout to be more accurate.
+ * @param {CallableFunction} fn Function to run at every interval.
+ * @param {number} time How often in milliseconds to run the function.
+ * @returns {object}
+ */
 function accurateInterval(fn, time) {
 	var cancel, nextAt, timeout, wrapper;
 	nextAt = performance.now() + time;
@@ -96,6 +102,10 @@ function getMinuteOffsetFromClockTime(timeStr) {
 	return total;
 }
 
+/**
+ * Updates main clock element, only on round minutes by default.
+ * @param {boolean} forceUpdate Option to update even if not at a round minute.
+ */
 function updateClockElement(forceUpdate = false) {
 	const currentTimeEl = document.getElementById(selectors.id_current);
 	const clockEl = document.getElementById(selectors.id_clock);
@@ -108,6 +118,9 @@ function updateClockElement(forceUpdate = false) {
 	}
 }
 
+/**
+ * Update all time elements in the page to local time.
+ */
 function updateTimeElements() {
 	const timeEls = document.querySelectorAll(selectors.s_time);
 
@@ -123,6 +136,9 @@ function updateTimeElements() {
 	});
 }
 
+/**
+ * Update main time input element for unschedule event form.
+ */
 function updateTimeInput() {
 	const timeInput = document.getElementById(
 		selectorsMain.id_toolAddUnscheduledTime
@@ -131,6 +147,10 @@ function updateTimeInput() {
 	timeInput.value = getClockTimeFromOffset(0);
 }
 
+/**
+ * Starts a clock that runs every second.
+ * @returns {object}
+ */
 export function startClock() {
 	const clockInterval = accurateInterval(() => {
 		updateClockElement();

@@ -26,7 +26,11 @@ const C_GRID = "mp-grid";
 // main grid
 const MAIN_GRID = document.querySelector(`.${C_GRID}`);
 
-// helper function to keep preference updates in one spot
+/**
+ * Helper function to keep preference updates in one spot.
+ * @param {string} key Name of item to save in main data object, will be prefixed with `pref_`
+ * @param {any} value The new value to save
+ */
 function setPref(key, value) {
 	if (!key) {
 		console.warn("Please specify a key for a pref to save");
@@ -53,7 +57,9 @@ function setPref(key, value) {
 	DATA[`pref_${key}`] = value;
 }
 
-// initialization stuff
+/**
+ * Start up IntersectionObserver for main grid to apply scroll-overflow classes.
+ */
 function startScrollIntersectObserver() {
 	if ("IntersectionObserver" in window) {
 		const intersectHandler = (changes, observer) => {
@@ -90,7 +96,12 @@ function startScrollIntersectObserver() {
 	}
 }
 
-// event handlers
+// begin event handlers
+
+/**
+ * Time controls event handler.
+ * @param {Event} event
+ */
 function handleRouteTimeControls(event) {
 	if (!["offset", "duration"].includes(event.target.dataset.control)) {
 		return;
@@ -107,6 +118,10 @@ function handleRouteTimeControls(event) {
 	}
 }
 
+/**
+ * Add event item event handler.
+ * @param {Event} event
+ */
 function handleAddEventItemToRoute(event) {
 	const actionEl = event.target.closest(
 		`.${routeSelectors.c_event}__actions button`
@@ -123,6 +138,10 @@ function handleAddEventItemToRoute(event) {
 	}
 }
 
+/**
+ * Route item controls event handler.
+ * @param {Event} event
+ */
 function handleRouteEventControls(event) {
 	const supportedControls = [
 		"removefromroute",
@@ -162,26 +181,50 @@ function handleRouteEventControls(event) {
 	}
 }
 
+/**
+ * Alt route control event handler.
+ * @param {Event} event
+ */
 function handleAltRouteToggle(event) {
 	setPref("enableAltRoute", event.target.checked);
 }
 
+/**
+ * Default duration control event handler.
+ * @param {Event} event
+ */
 function handleDefaultDurationChange(event) {
 	setPref("defaultDuration", event.target.value);
 }
 
+/**
+ * Add unscheduled item event handler.
+ * @param {Event} event
+ */
 function handleUnscheduledEventTrigger(event) {
 	addUnscheduledEvent();
 }
 
+/**
+ * Trigger export event handler.
+ * @param {Event} event
+ */
 function handleExportTrigger(event) {
 	exportData();
 }
 
+/**
+ * Trigger import event handler.
+ * @param {Event} event
+ */
 function handleImportTrigger(event) {
 	importData();
 }
 
+/**
+ * Copy waypoint event handler.
+ * @param {Event} event
+ */
 function handleWaypointClick(event) {
 	if ("waypointcopy" !== event.target.dataset.control) {
 		return;
@@ -190,6 +233,9 @@ function handleWaypointClick(event) {
 	copyWaypointCode(event.target);
 }
 
+/**
+ * Register all event listeners.
+ */
 function registerEventListeners() {
 	// event items: add to route
 	document.addEventListener("click", handleAddEventItemToRoute);
@@ -229,6 +275,9 @@ function registerEventListeners() {
 	importTrigger?.addEventListener("click", handleImportTrigger);
 }
 
+/**
+ * Main setup.
+ */
 async function setup() {
 	// check header height once, in case any groups have a long title
 	const header = document.querySelector(".mp-header");

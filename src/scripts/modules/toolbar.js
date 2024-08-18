@@ -7,6 +7,9 @@ import { getMinuteOffsetFromClockTime } from "./time.js";
 import selectors from "./selectors.js";
 import DATA from "./data.js";
 
+/**
+ * Add an unscheduled event.
+ */
 function addUnscheduledEvent() {
 	const eventSelectEl = document.getElementById(
 		selectors.id_toolAddUnscheduledSelect
@@ -25,6 +28,10 @@ function addUnscheduledEvent() {
 	addCustomEventItemToRoute(id, start);
 }
 
+/**
+ * Imports data from import/export input element, processes it, and updates route items and the main data object.
+ * Does handle basic prototype data from old v1 build as well.
+ */
 function importData() {
 	const input = document.getElementById(selectors.id_toolExportText);
 
@@ -126,6 +133,9 @@ function importData() {
 	}
 }
 
+/**
+ * Minimize route objects from main data object into a string and put it in the import/export input element.
+ */
 function exportData() {
 	const items = DATA.route.map((item) => {
 		return `${item.id}:${item.o}:${item.d}:${item.a ? 1 : 0}`;

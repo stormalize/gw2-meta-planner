@@ -2,6 +2,14 @@ import DATA from "./data.js";
 import selectorsMain from "./selectors.js";
 import { getClockTimeFromOffset } from "./time.js";
 
+/**
+ * @typedef {object} RouteItemData
+ * @property {string} id - Unique identifier to find the event item in the page.
+ * @property {number} o - Offset in minutes.
+ * @property {number} d - Duration in minutes.
+ * @property {boolean} a - Flag for whether this is part of the "alt" route.
+ */
+
 const selectors = {
 	c_route: "mp-route",
 	c_event: "mp-event",
@@ -12,10 +20,16 @@ const selectors = {
 const MAIN_GRID = document.querySelector(".mp-grid");
 
 // live HTML collection of route items
+/**
+ * @type {HTMLAllCollection}
+ */
 const ROUTE_ITEMS_COLLECTION = MAIN_GRID.getElementsByClassName(
 	selectors.c_route
 );
 
+/**
+ * Save route data to main data object
+ */
 function saveRouteData() {
 	const data = Array.from(ROUTE_ITEMS_COLLECTION).reduce((list, routeItem) => {
 		// skip header items
@@ -27,6 +41,9 @@ function saveRouteData() {
 	DATA.route = data;
 }
 
+/**
+ * Clear all route data from HTML and main data object
+ */
 function clearRouteData() {
 	Array.from(ROUTE_ITEMS_COLLECTION).forEach((routeItem) => {
 		// skip header items
@@ -37,6 +54,11 @@ function clearRouteData() {
 	DATA.route = [];
 }
 
+/**
+ * Set up route items from a list, optionally saving (initial page loading reads from main data object so we do not need to save)
+ * @param {Array.<RouteItemData>} data List of objects
+ * @param {boolean} [save=true] Whether to save to the main data object
+ */
 function setRouteItemsFromData(data, save = true) {
 	let enableAltRoute = false;
 	const addedIds = [];
@@ -79,6 +101,11 @@ function setRouteItemsFromData(data, save = true) {
 	}
 }
 
+/**
+ * Generate minimized object to save to main data and/or include in export string.
+ * @param {Element} routeItem
+ * @returns {RouteItemData}
+ */
 function getRouteItemSaveData(routeItem) {
 	const offsetEl = routeItem.querySelector("[data-control='offset']");
 	const durationEl = routeItem.querySelector("[data-control='duration']");
@@ -98,6 +125,10 @@ function getRouteItemSaveData(routeItem) {
 	};
 }
 
+/**
+ * Trigger copy action for waypoint code.
+ * @param {Element} button the button that was clicked.
+ */
 async function copyWaypointCode(button) {
 	const code = button.title.replace("Copy Waypoint ", "");
 	try {
@@ -111,6 +142,14 @@ async function copyWaypointCode(button) {
 	}
 }
 
+/**
+ * Clone event element from main list, add route data to markup and place into HTML with other route items.
+ * @param {Element} metaEventItem Target item that is to be added.
+ * @param {boolean} alt Whether this item should have a class added to position in the alt layout column.
+ * @param {number} duration Optional duration that should be set
+ * @param {number} offset Optional offset that should be set
+ * @param {boolean} save Whether to save to main data object
+ */
 function addEventItemToRoute(
 	metaEventItem,
 	alt = false,
@@ -210,6 +249,15 @@ function addEventItemToRoute(
 	}
 }
 
+/**
+ * Handle custom events -- clone event element from template and configure and then call regular add event function.
+ * @param {string} id Target item that is to be added, used to find template.
+ * @param {number} start Custom start time for new item.
+ * @param {boolean} alt Whether this item should have a class added to position in the alt layout column.
+ * @param {number} duration Optional duration that should be set
+ * @param {number} offset Optional offset that should be set
+ * @param {boolean} save Whether to save to main data object
+ */
 function addCustomEventItemToRoute(
 	id,
 	start,
@@ -231,6 +279,10 @@ function addCustomEventItemToRoute(
 	addEventItemToRoute(newItem, alt, duration, offset, save);
 }
 
+/**
+ * Remove a route item from the grid and update the main data object.
+ * @param {Element} routeItem Route item to remove from main grid.
+ */
 function removeEventItemFromRoute(routeItem) {
 	const eventId = routeItem?.id?.replace("route-", "");
 	if (eventId) {
@@ -241,6 +293,11 @@ function removeEventItemFromRoute(routeItem) {
 	saveRouteData();
 }
 
+/**
+ * @param {Element} routeItem Item to adjust.
+ * @param {number} newOffset Updated offset.
+ * @returns {number} Pass along newOffset.
+ */
 function adjustRouteItemOffset(routeItem, newOffset) {
 	const warnClass = `${selectors.c_event.replace(".", "")}--warning`;
 
@@ -274,11 +331,19 @@ function adjustRouteItemDuration(routeItem, newDuration = false) {
 	return duration;
 }
 
+/**
+ * Simply toggles a class to position route item into second route column in grid.
+ * @param {Element} routeItem Item to toggle to alt route.
+ */
 function toggleAltRouteItem(routeItem) {
 	routeItem.classList.toggle(`${selectors.c_route}--alt`);
 	saveRouteData();
 }
 
+/**
+ * Reset both offset and duration times for a route item, and updates main data object.
+ * @param {Element} routeItem Item to reset.
+ */
 function resetTimesForRouteItem(routeItem) {
 	const newOffset = adjustRouteItemOffset(routeItem, 0);
 	const newDuration = adjustRouteItemDuration(routeItem);
