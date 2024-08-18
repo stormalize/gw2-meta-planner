@@ -1,4 +1,5 @@
 import { selectors as route_selectors } from "./route.js";
+import selectorsMain from "./selectors.js";
 
 export const selectors = {
 	id_current: "time-current",
@@ -72,6 +73,29 @@ function getClockTimeFromOffset(offsetMinutes) {
 	return time;
 }
 
+/**
+ * Get total number of minutes from a string formatted as hh:mm.
+ * @param {string} timeStr The time string.
+ * @returns {number} Total minutes.
+ */
+function getMinuteOffsetFromClockTime(timeStr) {
+	if (!timeStr) {
+		return 0;
+	}
+
+	const date = new Date();
+
+	const [hours, minutes, ...rest] = timeStr.split(":");
+
+	date.setHours(Number(hours), Number(minutes), 0, 0);
+
+	const utcHours = date.getUTCHours();
+	const utcMinutes = date.getUTCMinutes();
+
+	const total = utcHours * 60 + utcMinutes;
+	return total;
+}
+
 function updateClockElement(forceUpdate = false) {
 	const currentTimeEl = document.getElementById(selectors.id_current);
 	const clockEl = document.getElementById(selectors.id_clock);
@@ -99,6 +123,14 @@ function updateTimeElements() {
 	});
 }
 
+function updateTimeInput() {
+	const timeInput = document.getElementById(
+		selectorsMain.id_toolAddUnscheduledTime
+	);
+
+	timeInput.value = getClockTimeFromOffset(0);
+}
+
 export function startClock() {
 	const clockInterval = accurateInterval(() => {
 		updateClockElement();
@@ -108,3 +140,6 @@ export function startClock() {
 
 updateClockElement(true);
 updateTimeElements();
+updateTimeInput();
+
+export { getMinuteOffsetFromClockTime };

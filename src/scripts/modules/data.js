@@ -7,7 +7,7 @@ const data = {
 
 const supportedKeys = ["route", "pref_enableAltRoute", "pref_defaultDuration"];
 
-// set up proxy to save to localstorage anytime main data object is updated
+// set up proxy to save to localstorage any time main data object is updated
 const dataProxy = {
 	set(obj, prop, value) {
 		if (supportedKeys.includes(prop)) {

@@ -13,6 +13,11 @@ function handle_assets()
 {
 	global $in_path, $out_path;
 
+	// make public if it doesn't exist
+	if (! is_dir($out_path)) {
+		mkdir($out_path, 0755);
+	}
+
 	foreach (['scripts', 'images'] as $type) {
 		$folder = $in_path . '/' . $type;
 		$target = $out_path . '/' . $type;
@@ -152,10 +157,17 @@ foreach ($event_data['metas'] as $meta) {
 	}
 }
 
+$hours = array_fill(0, 24, "");
+
+foreach ($hours as $key => $value) {
+	$hours[$key] = $key * 60;
+}
+
 $data = array(
 	'name' => 'THE YEAR OF GW2',
 	'groups' => $release_events,
 	'groups_unscheduled' => $release_events_unscheduled,
+	'hours' => $hours,
 );
 
 build();

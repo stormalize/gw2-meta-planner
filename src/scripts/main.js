@@ -4,6 +4,7 @@ import {
 	copyWaypointCode,
 	saveRouteData,
 	addEventItemToRoute,
+	addCustomEventItemToRoute,
 	removeEventItemFromRoute,
 	adjustRouteItemOffset,
 	adjustRouteItemDuration,
@@ -11,6 +12,7 @@ import {
 	toggleAltRouteItem,
 } from "./modules/route.js";
 import selectors from "./modules/selectors.js";
+import { addUnscheduledEvent } from "./modules/toolbar.js";
 import DATA from "./modules/data.js";
 
 // selectors
@@ -85,13 +87,21 @@ function startScrollIntersectObserver() {
 
 function initializeRouteItemsFromData(data) {
 	data.forEach((item) => {
-		const metaEventItem = document.getElementById(`event-${item.id}`);
-		if (metaEventItem) {
-			addEventItemToRoute(metaEventItem, item.a, item.d, item.o, false);
+		const isCustomEvent = item.id.startsWith("c");
+		if (isCustomEvent) {
+			const [idStr, startStr, ...rest] = item.id.split("-");
+			const id = Number(idStr.replace("c", ""));
+			const start = Number(startStr);
+			addCustomEventItemToRoute(id, start, item.a, item.d, item.o, false);
 		} else {
-			console.warn(
-				`Event item with id '${item.id}' failed to load for current route data, could not locate in page.`
-			);
+			const metaEventItem = document.getElementById(`event-${item.id}`);
+			if (metaEventItem) {
+				addEventItemToRoute(metaEventItem, item.a, item.d, item.o, false);
+			} else {
+				console.warn(
+					`Event item with id '${item.id}' failed to load for current route data, could not locate in page.`
+				);
+			}
 		}
 	});
 }
@@ -176,6 +186,10 @@ function handleDefaultDurationChange(event) {
 	setPref("defaultDuration", event.target.value);
 }
 
+function handleUnscheduledEventTrigger(event) {
+	addUnscheduledEvent();
+}
+
 function handleWaypointClick(event) {
 	if ("waypointcopy" !== event.target.dataset.control) {
 		return;
@@ -204,6 +218,14 @@ function registerEventListeners() {
 		"change",
 		handleDefaultDurationChange
 	);
+	// tools: add unscheduled event
+	const addUnscheduledEventTrigger = document.getElementById(
+		selectors.id_toolAddUnscheduledTrigger
+	);
+	addUnscheduledEventTrigger?.addEventListener(
+		"click",
+		handleUnscheduledEventTrigger
+	);
 }
 
 function setup() {
@@ -226,7 +248,13 @@ function setup() {
 	defaultDurationSelect.value = DATA.pref_defaultDuration;
 
 	// add check if reading from URL, skip loading from localStorage
-	initializeRouteItemsFromData(DATA.route);
+	const urlParams = new URLSearchParams(window.location.search);
+	const urlData = urlParams.get("d");
+	if (urlData) {
+		console.log(urlData);
+	} else {
+		initializeRouteItemsFromData(DATA.route);
+	}
 
 	registerEventListeners();
 	startScrollIntersectObserver();

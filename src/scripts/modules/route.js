@@ -29,7 +29,9 @@ function getRouteItemSaveData(routeItem) {
 	const offsetEl = routeItem.querySelector("[data-control='offset']");
 	const durationEl = routeItem.querySelector("[data-control='duration']");
 
-	const id = routeItem.id?.replace("route-event-", "");
+	const id = routeItem.classList.contains(`${selectors.c_event}--custom`)
+		? routeItem.id?.replace("route-custom-event-", "c")
+		: routeItem.id?.replace("route-event-", "");
 	const offset = Number(offsetEl?.value);
 	const duration = Number(durationEl?.value);
 	const alt = routeItem.classList.contains(`${selectors.c_route}--alt`);
@@ -148,6 +150,27 @@ function addEventItemToRoute(
 	}
 }
 
+function addCustomEventItemToRoute(
+	id,
+	start,
+	alt = false,
+	duration = false,
+	offset = false,
+	save = true
+) {
+	const template = document.getElementById(`template-custom-event-${id}`);
+	const content = template?.content.cloneNode(true);
+	const newItem = content.querySelector(`.${selectors.c_event}`) || false;
+
+	// set start time
+	newItem.dataset.start = start;
+	newItem.style.setProperty("--time", start);
+	newItem.id = `${newItem.id}-${start}`;
+	newItem.classList.add(`${selectors.c_event}--custom`);
+
+	addEventItemToRoute(newItem, alt, duration, offset, save);
+}
+
 function removeEventItemFromRoute(routeItem) {
 	const eventId = routeItem?.id?.replace("route-", "");
 	if (eventId) {
@@ -213,6 +236,7 @@ export {
 	copyWaypointCode,
 	saveRouteData,
 	addEventItemToRoute,
+	addCustomEventItemToRoute,
 	removeEventItemFromRoute,
 	adjustRouteItemOffset,
 	adjustRouteItemDuration,
