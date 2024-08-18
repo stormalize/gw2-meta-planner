@@ -38,9 +38,91 @@ $clock_increments = array_map(
 </head>
 
 <body>
-	<h1>GW2 Meta Planner</h1>
+	<header class="mp-site-header">
+		<h1>GW2 Meta Planner</h1>
+		<details class="mp-instructions" open>
+			<summary>Instructions</summary>
+			<div class="mp-instructions__content">
+				<h2>How to Use</h2>
+				<h3>Event Grid</h3>
+				<ul>
+					<li>Grid begins at daily reset, times are shown in your local time.</li>
+					<li>Use the navigation to jump to a specific hour.</li>
+					<li>Events are grouped together by map and release.</li>
+					<li>For metas without a set timer or private instances that are started manually, use the <em>Add Unscheduled Event</em> in the toolbar.</li>
+				</ul>
+				<h3>Routes</h3>
+				<ul>
+					<li>
+						By default events are added to the <svg class="mp-icon mp-icon--inline" viewbox="0 0 24 24">
+							<use href="./images/icon-library.svg#star"></use>
+						</svg> <strong>Primary</strong> route.
+					</li>
+					<li>A second <svg class="mp-icon mp-icon--inline" viewbox="0 0 24 24">
+							<use href="./images/icon-library.svg#triangle"></use>
+						</svg> <strong>Alternate</strong> route may be enabled that can be used for planning backup events in case events in the Primary route don't succeed, arrive too late, or anything else that could go wrong.
+					</li>
+					<li>
+						Customize events in your route by adjusting the <em>Estimated duration (Est.)</em> for each event based on how quickly your group can complete it. Definitions of the provided times:
+						<ul>
+							<li>
+								<strong>Minimum</strong>: large pre-made squad with boons doing
+								high DPS.
+							</li>
+							<li>
+								<strong>Average</strong>: regular map or a small pre-made squad
+								mixed with randoms.
+							</li>
+							<li>
+								<strong>Maximum</strong>: hard limit of the event, usually timers
+								on the event chain that cause the event to fail if they run out.
+							</li>
+						</ul>
+					</li>
+					<li>The <em>Default Estimate</em> setting in the toolbar will change which preset estimate is used whenever you add a new event to a route.</li>
+					<li>You can also adjust the <em>Delay Offset (Off.)</em> of an event in your route if you plan to finish up a previous event and then arrive late to the next one.</li>
+					<li>
+						Use the <em>Estimate</em> and <em>Offset</em> options for each event
+						in your route to fine-tune events that might overwise overlap.
+					</li>
+				</ul>
+				<h3>Import/Export</h3>
+				<ul>
+					<li>Your routes and settings are saved across page loads.</li>
+					<li>In addition to saving locally, basic import and exporting of routes is
+						supported. To save and share routes as a plain text string:
+						<ol>
+							<li>
+								<strong>Export</strong>: Hit the "Generate Export" button to
+								generate a text string of your current route data, and save it
+								somewhere like a text file.
+							</li>
+							<li>
+								<strong>Import</strong>: Paste in a generated text string and hit
+								"Import" to set up previously saved routes (note it will replace
+								your existing route data that may have been saved in tour browser storage).
+							</li>
+						</ol>
+					</li>
+				</ul>
+			</div>
+		</details>
+	</header>
 	<div class="mp-layout">
 		<div class="mp-toolbar">
+			<div class="mp-toolbar__section">
+				<svg class="mp-icon" viewbox="0 0 24 24">
+					<use href="./images/icon-library.svg#scroll-arrows-swap-h"></use>
+				</svg>
+				<div class="mp-toolbar__content">
+					<label class="mp-toolbar__label" for="tool-export-text">Export/Import Route Data</label>
+					<div>
+						<button id="tool-export-trigger">Export</button>
+						<input type="text" id="tool-export-text" placeholder="paste import data here">
+						<button id="tool-export-trigger-import">Import</button>
+					</div>
+				</div>
+			</div>
 			<div class="mp-toolbar__section">
 				<svg class="mp-icon" viewbox="0 0 24 24">
 					<use href="./images/icon-library.svg#star-triangle"></use>
@@ -203,7 +285,7 @@ $clock_increments = array_map(
 	<template id="route-time-controls">
 		<ul class="mp-event__time-controls">
 			<li>
-				<label for="route-event-offset">Delay</label>
+				<label for="route-event-offset">Off.</label>
 				<input
 					data-control="offset"
 					id="route-event-offset"

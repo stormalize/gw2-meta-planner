@@ -10,9 +10,14 @@ import {
 	adjustRouteItemDuration,
 	resetTimesForRouteItem,
 	toggleAltRouteItem,
+	setRouteItemsFromData,
 } from "./modules/route.js";
 import selectors from "./modules/selectors.js";
-import { addUnscheduledEvent } from "./modules/toolbar.js";
+import {
+	addUnscheduledEvent,
+	exportData,
+	importData,
+} from "./modules/toolbar.js";
 import DATA from "./modules/data.js";
 
 // selectors
@@ -83,27 +88,6 @@ function startScrollIntersectObserver() {
 		observer.observe(firstItem);
 		observer.observe(lastItem);
 	}
-}
-
-function initializeRouteItemsFromData(data) {
-	data.forEach((item) => {
-		const isCustomEvent = item.id.startsWith("c");
-		if (isCustomEvent) {
-			const [idStr, startStr, ...rest] = item.id.split("-");
-			const id = Number(idStr.replace("c", ""));
-			const start = Number(startStr);
-			addCustomEventItemToRoute(id, start, item.a, item.d, item.o, false);
-		} else {
-			const metaEventItem = document.getElementById(`event-${item.id}`);
-			if (metaEventItem) {
-				addEventItemToRoute(metaEventItem, item.a, item.d, item.o, false);
-			} else {
-				console.warn(
-					`Event item with id '${item.id}' failed to load for current route data, could not locate in page.`
-				);
-			}
-		}
-	});
 }
 
 // event handlers
@@ -190,6 +174,14 @@ function handleUnscheduledEventTrigger(event) {
 	addUnscheduledEvent();
 }
 
+function handleExportTrigger(event) {
+	exportData();
+}
+
+function handleImportTrigger(event) {
+	importData();
+}
+
 function handleWaypointClick(event) {
 	if ("waypointcopy" !== event.target.dataset.control) {
 		return;
@@ -208,7 +200,9 @@ function registerEventListeners() {
 	// route items: waypoint copy
 	document.addEventListener("click", handleWaypointClick);
 	// prefs: alt route
-	const altRouteInput = document.getElementById("pref-enable-alt-route");
+	const altRouteInput = document.getElementById(
+		selectors.id_prefEnableAltRoute
+	);
 	altRouteInput?.addEventListener("change", handleAltRouteToggle);
 	// prefs: default duration
 	const defaultDurationSelect = document.getElementById(
@@ -226,9 +220,16 @@ function registerEventListeners() {
 		"click",
 		handleUnscheduledEventTrigger
 	);
+	// tools: export
+	const exportTrigger = document.getElementById(selectors.id_toolExportTrigger);
+	exportTrigger?.addEventListener("click", handleExportTrigger);
+	const importTrigger = document.getElementById(
+		selectors.id_toolExportTriggerImport
+	);
+	importTrigger?.addEventListener("click", handleImportTrigger);
 }
 
-function setup() {
+async function setup() {
 	// check header height once, in case any groups have a long title
 	const header = document.querySelector(".mp-header");
 	const height = header.getBoundingClientRect().height;
@@ -247,14 +248,8 @@ function setup() {
 	);
 	defaultDurationSelect.value = DATA.pref_defaultDuration;
 
-	// add check if reading from URL, skip loading from localStorage
-	const urlParams = new URLSearchParams(window.location.search);
-	const urlData = urlParams.get("d");
-	if (urlData) {
-		console.log(urlData);
-	} else {
-		initializeRouteItemsFromData(DATA.route);
-	}
+	// TODO: add check if reading from URL, skip loading from localStorage
+	setRouteItemsFromData(DATA.route, false);
 
 	registerEventListeners();
 	startScrollIntersectObserver();

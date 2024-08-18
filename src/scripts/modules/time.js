@@ -142,4 +142,4 @@ updateClockElement(true);
 updateTimeElements();
 updateTimeInput();
 
-export { getMinuteOffsetFromClockTime };
+export { getMinuteOffsetFromClockTime, getClockTimeFromOffset };

@@ -1,4 +1,6 @@
 import DATA from "./data.js";
+import selectorsMain from "./selectors.js";
+import { getClockTimeFromOffset } from "./time.js";
 
 const selectors = {
 	c_route: "mp-route",
@@ -23,6 +25,58 @@ function saveRouteData() {
 		return list;
 	}, []);
 	DATA.route = data;
+}
+
+function clearRouteData() {
+	Array.from(ROUTE_ITEMS_COLLECTION).forEach((routeItem) => {
+		// skip header items
+		if (!routeItem.classList.contains("mp-header")) {
+			removeEventItemFromRoute(routeItem);
+		}
+	});
+	DATA.route = [];
+}
+
+function setRouteItemsFromData(data, save = true) {
+	let enableAltRoute = false;
+	const addedIds = [];
+	data.forEach((item) => {
+		if (!enableAltRoute && item.a) {
+			enableAltRoute = true;
+		}
+		const isCustomEvent = item.id.startsWith("c");
+		if (isCustomEvent) {
+			const [idStr, startStr, ...rest] = item.id.split("-");
+			const id = Number(idStr.replace("c", ""));
+			const start = Number(startStr);
+			addCustomEventItemToRoute(id, start, item.a, item.d, item.o, save);
+		} else {
+			if (addedIds.includes(item.id)) {
+				console.warn(
+					`Duplicate item with id ${item.id} detected in import, skipping.`
+				);
+			} else {
+				const metaEventItem = document.getElementById(`event-${item.id}`);
+				if (metaEventItem) {
+					addEventItemToRoute(metaEventItem, item.a, item.d, item.o, save);
+				} else {
+					console.warn(
+						`Event item with id '${item.id}' failed to load for current route data, could not locate in page.`
+					);
+				}
+				addedIds.push(item.id);
+			}
+		}
+	});
+
+	if (enableAltRoute) {
+		const checkbox = document.getElementById(
+			selectorsMain.id_prefEnableAltRoute
+		);
+		checkbox.checked = true;
+		const evt = new Event("change", { bubbles: true });
+		checkbox.dispatchEvent(evt);
+	}
 }
 
 function getRouteItemSaveData(routeItem) {
@@ -147,6 +201,12 @@ function addEventItemToRoute(
 
 	if (save) {
 		saveRouteData();
+
+		const timeInput = document.getElementById(
+			selectorsMain.id_toolAddUnscheduledTime
+		);
+		// update add form to default to end time of event we just added
+		timeInput.value = getClockTimeFromOffset(time1 + defaultDuration);
 	}
 }
 
@@ -235,6 +295,7 @@ export {
 	selectors,
 	copyWaypointCode,
 	saveRouteData,
+	clearRouteData,
 	addEventItemToRoute,
 	addCustomEventItemToRoute,
 	removeEventItemFromRoute,
@@ -242,4 +303,5 @@ export {
 	adjustRouteItemDuration,
 	resetTimesForRouteItem,
 	toggleAltRouteItem,
+	setRouteItemsFromData,
 };
