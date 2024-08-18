@@ -65,6 +65,19 @@ $clock_increments = array_map(
 		<option selected="" value="avg">Average</option>
 		<option value="max">Maximum</option>
 	</select>
+	<label for="tool-unscheduled-add-select">Add Unscheduled Event</label>
+	<select id="tool-unscheduled-add-select">
+		<?php foreach ($data['groups_unscheduled'] as $group_name => $group) { ?>
+			<optgroup label="<?php echo $group_name; ?>">
+				<?php foreach ($group as $key => $event) { ?>
+					<option value="<?php echo $event['id']; ?>"><?php echo $event['name']; ?></option>
+				<?php } ?>
+			</optgroup>
+		<?php } ?>
+	</select>
+	<label for="tool-unscheduled-add-time">Time</label>
+	<input type="time" id="tool-unscheduled-add-time">
+	<button id="tool-unscheduled-add-trigger">Add</button>
 	<?php $group_col_total = count($data['groups']); ?>
 	<div class="mp-grid mp-grid--loading" style="--mp-grid--group-col-count: <?php echo $group_col_total; ?>">
 		<div class="mp-header mp-time">Time</div>
