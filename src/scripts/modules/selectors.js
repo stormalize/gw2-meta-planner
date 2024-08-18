@@ -7,4 +7,5 @@ export default {
 	id_toolExportText: "tool-export-text",
 	id_toolExportTrigger: "tool-export-trigger",
 	id_toolExportTriggerImport: "tool-export-trigger-import",
+	id_loadingBar: "loading-bar",
 };

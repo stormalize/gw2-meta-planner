@@ -41,6 +41,10 @@ body {
 	font-family: system-ui, sans-serif;
 }
 
+[hidden] {
+	display: none !important;
+}
+
 .mp-icon {
 	height: 1.5rem;
 	width: 1.5rem;
@@ -97,14 +101,54 @@ body {
 	}
 }
 
+.mp-loading {
+	margin: 0 2rem 2rem;
+	text-align: center;
+	--mp-loading--g-color-1: color-mix(
+		in oklab,
+		var(--mp-color-sys--primary) 15%,
+		transparent
+	);
+	--mp-loading--g-color-2: color-mix(
+		in oklab,
+		var(--mp-color-sys--fg) 10%,
+		transparent
+	);
+	text-align: center;
+	display: block;
+	padding: 0.5rem;
+	background-image: linear-gradient(
+		45deg,
+		var(--mp-loading--g-color-1) 25%,
+		var(--mp-loading--g-color-2) 25%,
+		var(--mp-loading--g-color-2) 50%,
+		var(--mp-loading--g-color-1) 50%,
+		var(--mp-loading--g-color-1) 75%,
+		var(--mp-loading--g-color-2) 75%,
+		var(--mp-loading--g-color-2)
+	);
+	background-size: 2rem 2rem;
+	animation: 1s linear infinite bgslide;
+}
+
+@keyframes bgslide {
+	from {
+		background-position: top left 0;
+	}
+
+	to {
+		background-position: top left 2rem;
+	}
+}
+
 .mp-layout {
 	--mp-layout--border: 0.125rem solid var(--mp-color-sys--border);
 	--mp-layout--border-radius: 0.5rem;
 	display: grid;
 	grid-template-columns: 8rem 1fr;
-	grid-template-rows: auto 80vh auto;
-	grid-template-areas: "toolbar toolbar" "time-nav main-grid" "time-nav footer";
-	margin-inline: 2rem;
+	grid-template-rows: auto 80vh;
+	grid-template-areas: "toolbar toolbar" "time-nav main-grid";
+	margin: 0 2rem 2rem;
 	gap: 1.5rem;
 
 	h2 {
@@ -123,6 +167,62 @@ body {
 		font-size: var(--mp-type--scale--300);
 		font-weight: 700;
 	}
+
+	button {
+		appearance: none;
+		background: var(--mp-color-sys--primary-muted);
+		color: var(--mp-color-sys--fg);
+		border: 2px solid
+			color-mix(in oklab, var(--mp-color-sys--fg) 25%, transparent);
+		padding: 0.25rem;
+		font: inherit;
+		font-size: var(--mp-type--scale--300);
+		border-radius: 3px;
+		cursor: pointer;
+		font-weight: 700;
+
+		&:hover,
+		&:focus-visible {
+			background: linear-gradient(
+				45deg,
+				var(--mp-color-sys--primary),
+				var(--mp-color-sys--primary-alt)
+			);
+			box-shadow: 0 0.25rem 0 var(--mp-color-sys--bg);
+		}
+
+		&:active {
+			position: relative;
+			top: 0.125rem;
+			box-shadow: 0 0.125rem 0 var(--mp-color-sys--bg);
+		}
+	}
+
+	select,
+	input {
+		max-width: 100%;
+	}
+
+	button,
+	select,
+	input {
+		min-height: 2rem;
+	}
+
+	input[type="checkbox"] {
+		aspect-ratio: 1;
+		appearance: none;
+		background-color: var(--mp-color-sys--bg-sub);
+		border: 2px solid var(--mp-color-sys--border);
+		border-radius: 4px;
+
+		&:checked {
+			background-image: url("./images/icons/check-white.svg");
+			background-size: 1.5rem 1.5rem;
+			background-repeat: no-repeat;
+			background-position: center center;
+		}
+	}
 }
 
 .mp-toolbar__section {
@@ -138,6 +238,12 @@ body {
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
+
+	> div {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
 }
 
 .mp-time-nav {
@@ -305,10 +411,6 @@ body {
 				(var(--mp-grid--column-width) + var(--mp-grid--gap-length)) * 2
 			);
 		}
-	}
-
-	&.mp-grid--loading {
-		border-block-start: 0.5rem solid red;
 	}
 
 	& > .mp-lines {

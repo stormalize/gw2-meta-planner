@@ -255,7 +255,8 @@ async function setup() {
 	startScrollIntersectObserver();
 
 	startClock();
-	MAIN_GRID.classList.remove(`${C_GRID}--loading`);
+	const loadingBar = document.getElementById(selectors.id_loadingBar);
+	loadingBar.setAttribute("hidden", "");
 }
 
 setup();

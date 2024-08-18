@@ -40,7 +40,7 @@ $clock_increments = array_map(
 <body>
 	<header class="mp-site-header">
 		<h1>GW2 Meta Planner</h1>
-		<details class="mp-instructions" open>
+		<details class="mp-instructions">
 			<summary>Instructions</summary>
 			<div class="mp-instructions__content">
 				<h2>How to Use</h2>
@@ -108,6 +108,7 @@ $clock_increments = array_map(
 			</div>
 		</details>
 	</header>
+	<p id="loading-bar" class="mp-loading">Loading...</p>
 	<div class="mp-layout">
 		<div class="mp-toolbar">
 			<div class="mp-toolbar__section">

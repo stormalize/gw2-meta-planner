@@ -35,6 +35,11 @@ function importData() {
 	const version = second ? first : false;
 	const data = second ? second : first;
 
+	if (!data) {
+		// nothing to import
+		return;
+	}
+
 	if (version) {
 		// TODO: handle separate versions if needed
 		const v = Number(version.replace("v"));
