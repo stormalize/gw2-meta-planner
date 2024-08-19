@@ -94,7 +94,7 @@ $clock_increments = array_map(
 						supported. To save and share routes as a plain text string:
 						<ol>
 							<li>
-								<strong>Export</strong>: Hit the "Generate Export" button to
+								<strong>Export</strong>: Hit the "Export" button to
 								generate a text string of your current route data, and save it
 								somewhere like a text file.
 							</li>
