@@ -101,7 +101,7 @@ $clock_increments = array_map(
 							<li>
 								<strong>Import</strong>: Paste in a generated text string and hit
 								"Import" to set up previously saved routes (note it will replace
-								your existing route data that may have been saved in tour browser storage).
+								your existing route data that may have been saved in your browser storage).
 							</li>
 						</ol>
 					</li>
