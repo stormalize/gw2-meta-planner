@@ -146,7 +146,7 @@ body {
 	--mp-layout--border-radius: 0.5rem;
 	display: grid;
 	grid-template-columns: 8rem 1fr;
-	grid-template-rows: auto 80vh;
+	grid-template-rows: auto auto;
 	grid-template-areas: "toolbar toolbar" "time-nav main-grid";
 	margin: 0 2rem 2rem;
 	gap: 1.5rem;
