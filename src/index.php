@@ -39,6 +39,12 @@ $clock_increments = array_map(
 </head>
 
 <body>
+	<div class="mp-hs-banner">
+		<p>This project has been integrated into Hardstuck.gg. The newer version on Hardstuck has had a number of improvements made and will continue any other updates and iteration there &#8211; this version on GitHub pages is considered archived along with the original repo.</p>
+		<p><a href="https://hardstuck.gg/gw2/meta-event-planner/">Meta-Event Planner on Hardstuck.gg<svg class="mp-icon mp-icon--inline" viewbox="0 0 24 24">
+					<use href="./images/icon-library.svg#arrow-right"></use>
+				</svg></a></p>
+	</div>
 	<header class="mp-site-header">
 		<h1>GW2 Meta Planner</h1>
 		<details class="mp-instructions">

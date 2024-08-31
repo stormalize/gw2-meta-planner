@@ -141,6 +141,39 @@ body {
 	}
 }
 
+.mp-hs-banner {
+	background-color: rgb(108 26 249 / 50%);
+	color: var(--mp-color-sys--fg);
+	padding: 1rem;
+	text-align: center;
+	line-height: 1.5;
+
+	p {
+		max-width: 110ch;
+		margin-inline: auto;
+	}
+
+	a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25em;
+		line-height: 1;
+		color: rgb(233, 140, 53);
+
+		svg {
+			margin-block-start: 0.2em;
+		}
+
+		&:hover {
+			color: rgb(203, 124, 21);
+		}
+	}
+
+	> *:not(:first-child) {
+		margin-block-start: 1rem;
+	}
+}
+
 .mp-layout {
 	--mp-layout--border: 0.125rem solid var(--mp-color-sys--border);
 	--mp-layout--border-radius: 0.5rem;

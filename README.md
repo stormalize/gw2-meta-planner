@@ -1,5 +1,11 @@
 # GW2 Meta Planner
 
+> NOTE: This project has been integrated into Hardstuck.gg. The version on Hardstuck has had a number of improvements made and will continue any other updates and iteration there – this version is left for historical purposes.
+>
+> [Meta-Event Planner on Hardstuck.gg →](https://hardstuck.gg/gw2/meta-event-planner/)
+>
+> Thanks to MightyTeapot and Darens for many helpful suggestions regarding UX/UI and event estimates for the initial prototype, and huge thanks to Rennorb for working to integrate it into Hardstuck as well as providing a ton of useful feedback and guidance on my original iterations.
+
 ## Development
 
 Minimal file watching for CSS, JS, PHP/HTML, and JSON inside the `src` directory:
